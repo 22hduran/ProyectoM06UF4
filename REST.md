@@ -28,7 +28,7 @@ REST (Representational State Transfer) es un conjunto de interfaces que permiten
 
 - **Separación de Capas:** El sistema se estructura en capas, con cada capa responsable de una función específica. Esto mejora la modularidad y la flexibilidad del sistema.
 
-## Ejemplo de Uso de REST API
+## Ejemplo de Uso de REST
 
 Supongamos que tenemos un sistema de gestión de libros. Podríamos utilizar una API REST para acceder a este sistema desde diferentes clientes, como una aplicación web o móvil.
 
@@ -39,5 +39,3 @@ Supongamos que tenemos un sistema de gestión de libros. Podríamos utilizar una
 - **POST /libros:** Añade un nuevo libro a la colección.
 - **PUT /libros/{id}:** Actualiza los datos de un libro existente.
 - **DELETE /libros/{id}:** Elimina un libro de la colección.
-
-Estas operaciones siguen los principios de REST, permitiendo una comunicación eficiente y flexible entre los clientes y el servidor.
