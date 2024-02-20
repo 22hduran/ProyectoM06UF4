@@ -1,40 +1,43 @@
-# API REST: Una Introducció
+# API REST: Una Introducción
 
-## Què és una API REST?
+## ¿Qué es una API REST?
 
-Una API REST (Representational State Transfer) és un conjunt d'interfícies que permeten la comunicació entre sistemes informàtics a través d'Internet. Es basa en els principis de l'arquitectura REST, que ofereixen una forma estandarditzada de construir i accedir a serveis web.
+Una API REST (Representational State Transfer) es un conjunto de interfaces que permiten la comunicación entre sistemas informáticos a través de Internet. Se basa en los principios de la arquitectura REST, que ofrecen una forma estandarizada de construir y acceder a servicios web.
 
-## Principis Clau de REST
+## Principios Clave de REST
 
-### 1. Arquitectura Client-Servidor
-- **Separació de Responsabilitats:** El client i el servidor són entitats independents i cadascun té rols específics en la comunicació.
+### 1. Arquitectura Cliente-Servidor
 
-### 2. Sense Estat (Stateless)
-- **Les Sol·licituds Són Independents:** Cada sol·licitud del client al servidor ha de contenir tota la informació necessària per ser entesa, sense dependre de sol·licituds anteriors. Això simplifica la implementació del servidor i millora l'escalabilitat.
+- **Separación de Responsabilidades:** El cliente y el servidor son entidades independientes y cada uno tiene roles específicos en la comunicación.
 
-### 3. Interfície Uniforme
-- **Recursos Identificats Únicament:** Cada recurs (com ara un document o una imatge) ha de ser identificat de manera única a través d'URLs.
-- **Operacions Estàndard:** Utilitza un conjunt d'operacions estàndard com GET, POST, PUT i DELETE per accedir i manipular recursos.
-- **Representació de Recursos:** Les representacions dels recursos (com ara JSON o XML) han d'estar clarament definides.
+### 2. Sin Estado (Stateless)
+
+- **Las Solicitudes Son Independientes:** Cada solicitud del cliente al servidor debe contener toda la información necesaria para ser entendida, sin depender de solicitudes anteriores. Esto simplifica la implementación del servidor y mejora la escalabilidad.
+
+### 3. Interfaz Uniforme
+
+- **Recursos Identificados Únicamente:** Cada recurso (como un documento o una imagen) debe ser identificado de manera única a través de URLs.
+- **Operaciones Estándar:** Utiliza un conjunto de operaciones estándar como GET, POST, PUT y DELETE para acceder y manipular recursos.
+- **Representación de Recursos:** Las representaciones de los recursos (como JSON o XML) deben estar claramente definidas.
 
 ### 4. Cacheable
-- **Caches Explotables:** Les respostes del servidor han de ser marcades explícitament com a cacheables o no-cacheables, permetent l'ús eficient de la memòria cau.
 
-### 5. Sistema en Capes
-- **Separació de Capes:** El sistema s'estructura en capes, amb cada capa responsable d'una funció específica. Això millora la modularitat i la flexibilitat del sistema.
+- **Caches Explotables:** Las respuestas del servidor deben ser marcadas explícitamente como cacheables o no-cacheables, permitiendo el uso eficiente de la memoria caché.
 
-## Exemple d'Ús de REST API
+### 5. Sistema en Capas
 
-Suposem que tenim un sistema de gestió de llibres. Podríem utilitzar una API REST per accedir a aquest sistema des de diferents clients, com ara una aplicació web o mòbil.
+- **Separación de Capas:** El sistema se estructura en capas, con cada capa responsable de una función específica. Esto mejora la modularidad y la flexibilidad del sistema.
 
-### Operacions Bàsiques:
+## Ejemplo de Uso de REST API
 
-- **GET /llibres:** Recupera una llista de tots els llibres disponibles.
-- **GET /llibres/{id}:** Recupera els detalls d'un llibre específic.
-- **POST /llibres:** Afegeix un nou llibre a la col·lecció.
-- **PUT /llibres/{id}:** Actualitza les dades d'un llibre existent.
-- **DELETE /llibres/{id}:** Elimina un llibre de la col·lecció.
+Supongamos que tenemos un sistema de gestión de libros. Podríamos utilizar una API REST para acceder a este sistema desde diferentes clientes, como una aplicación web o móvil.
 
-Aquestes operacions segueixen els principis de REST, permetent una comunicació eficient i flexible entre els clients i el servidor.
+### Operaciones Básicas:
 
-Amb una comprensió bàsica d'API REST i els seus principis, pots començar a dissenyar i implementar serveis web robustos i escalables. Segueix explorant i practicant per dominar aquesta poderosa tecnologia!
+- **GET /libros:** Recupera una lista de todos los libros disponibles.
+- **GET /libros/{id}:** Recupera los detalles de un libro específico.
+- **POST /libros:** Añade un nuevo libro a la colección.
+- **PUT /libros/{id}:** Actualiza los datos de un libro existente.
+- **DELETE /libros/{id}:** Elimina un libro de la colección.
+
+Estas operaciones siguen los principios de REST, permitiendo una comunicación eficiente y flexible entre los clientes y el servidor.
