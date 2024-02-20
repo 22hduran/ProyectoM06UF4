@@ -1,8 +1,5 @@
 # Fetch
 
-[Introducción a Fetch API y sus funcionalidades](https://www.notion.so/Introducci-n-a-Fetch-API-y-sus-funcionalidades-863759e0f1f34b539d95c599e8477136?pvs=21)
-
-[](https://www.notion.so/de7ac846b1464f778a7ad528c192d675?pvs=21)
 
 # Introducción a Fetch API y sus funcionalidades
 
