@@ -1,10 +1,10 @@
-# API REST: Una Introducción
+# REST
 
-## ¿Qué es una API REST?
+## ¿Qué es REST?
 
-Una API REST (Representational State Transfer) es un conjunto de interfaces que permiten la comunicación entre sistemas informáticos a través de Internet. Se basa en los principios de la arquitectura REST, que ofrecen una forma estandarizada de construir y acceder a servicios web.
+REST (Representational State Transfer) es un conjunto de interfaces que permiten la comunicación entre sistemas informáticos a través de Internet. Se basa en los principios de la arquitectura REST, que ofrecen una forma estandarizada de construir y acceder a servicios web.
 
-## Principios Clave de REST
+## Principios de arquitectura REST
 
 ### 1. Arquitectura Cliente-Servidor
 
