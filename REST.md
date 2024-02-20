@@ -30,9 +30,9 @@ REST (Representational State Transfer) es un conjunto de interfaces que permiten
 
 ## Ejemplo de Uso de REST
 
-Supongamos que tenemos un sistema de gestión de libros. Podríamos utilizar una API REST para acceder a este sistema desde diferentes clientes, como una aplicación web o móvil.
+Supongamos que tenemos una aplicación de un sistema de gestión de libros. Podríamos utilizar REST para acceder a este sistema desde diferentes clientes, como una aplicación web o móvil.
 
-### Operaciones Básicas:
+### Operaciones Comunes:
 
 - **GET /libros:** Recupera una lista de todos los libros disponibles.
 - **GET /libros/{id}:** Recupera los detalles de un libro específico.
