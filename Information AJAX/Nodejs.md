@@ -27,3 +27,42 @@ const server = http.createServer((req, res) => {
 server.listen(3000, () => {
   console.log('Server running at http://localhost:3000/');
 });
+
+```
+# Explicación sobre Express.js
+
+Express.js es un framework para Node.js que proporciona una serie de características que facilitan la construcción de aplicaciones web y API REST de manera rápida y sencilla. Express.js es uno de los frameworks más populares para Node.js y es ampliamente utilizado en la industria para la creación de aplicaciones web y API REST.
+
+## Características principales
+
+- **Routing:** Express.js proporciona un sistema de enrutamiento que permite definir las rutas de la aplicación y asociarlas con funciones de controlador que manejan las solicitudes entrantes. Esto facilita la creación de rutas para diferentes endpoints de la API y la definición de acciones específicas para cada ruta.
+
+- **Static Files:** Express.js permite servir archivos estáticos, como imágenes, CSS y JavaScript, desde un directorio específico en el servidor.
+
+- **Error Handling:** Express.js proporciona un sistema de manejo de errores que permite capturar y manejar errores en la aplicación de manera centralizada.
+
+- **Debugging:** Express.js proporciona herramientas de depuración que facilitan la identificación y corrección de errores en la aplicación.
+
+## Ejemplo de uso
+
+A continuación, se muestra un ejemplo básico de cómo crear una aplicación web utilizando Express.js:
+
+```javascript
+const express = require('express');
+const app = express();
+const PORT = 3000;
+
+// Definir una ruta para la página de inicio
+app.get('/', (req, res) => {
+  res.send('Hello, world!');
+});
+
+// Definir una ruta para una página de contacto
+app.get('/contact', (req, res) => {
+  res.send('Contact us at contact@example.com');
+});
+
+// Iniciar el servidor
+app.listen(PORT, () => {
+  console.log(`Server running at http://localhost:${PORT}/`);
+});
