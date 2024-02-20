@@ -39,3 +39,7 @@ Supongamos que tenemos una aplicación de un sistema de gestión de libros. Podr
 - **POST /libros:** Añade un nuevo libro a la colección.
 - **PUT /libros/{id}:** Actualiza los datos de un libro existente.
 - **DELETE /libros/{id}:** Elimina un libro de la colección.
+
+### Ejercicio de prueba:
+
+Ahora supongamos que tenemos una empresa dedicada a vender videojuegos. Quiero que añadas las operaciones necesarias para añadir un nuevo juego, borrar ese juego, volver a añadir un juego, ver una lista de los juegos que tenemos, y buscar el último juego que has añadido por su id.
