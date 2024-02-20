@@ -15,7 +15,7 @@ La Fetch API es una interfaz moderna para realizar solicitudes de red en navegad
 
 ## Uso Básico
 
-1. **Crear (Create)**
+**Crear (Create)**
 
 ```jsx
 const url = 'https://api.example.com/usuarios';
@@ -39,7 +39,7 @@ fetch(url, {
 
 ```
 
-1. **Leer (Read)**
+**Leer (Read)**
 
 ```jsx
 const url = 'https://api.example.com/usuarios';
@@ -51,7 +51,7 @@ fetch(url)
 
 ```
 
-1. **Actualizar (Update)**
+**Actualizar (Update)**
 
 ```jsx
 const usuarioId = 123;
@@ -76,7 +76,7 @@ fetch(url, {
 
 ```
 
-1. **Eliminar (Delete)**
+**Eliminar (Delete)**
 
 ```jsx
 const usuarioId = 123;
