@@ -37,16 +37,20 @@ Supongamos que tenemos una aplicación de un sistema de gestión de libros. Podr
 - **GET /libros:** Recupera una lista de todos los libros disponibles.
 - **GET /libros/{id}:** Recupera los detalles de un libro específico.
 - **POST /libros:** Añade un nuevo libro a la colección.
+```
   POST /libros
 	Body: {
 	    "name": "Harry Potter",
 	    "price": 10
 	}
+```
 - **PUT /libros/{id}:** Actualiza los datos de un libro existente.
+  ```
   Body: {
 	    "name": "Harry Potter",
 	    "price": 11
 	}
+  ```
 - **DELETE /libros/{id}:** Elimina un libro de la colección.
 
 ### Ejercicio de prueba:
