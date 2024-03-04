@@ -5,24 +5,25 @@ const { Client } = require('pg');
 
 const connectionData = {
 
-  user: 'user',
+  user: 'postgres',
 
-  host: '',
+  host: 'localhost',
 
-  database: '',
+  database: 'Sakila',
 
-  password: 'mysecretpassword',
+  password: '',
 
   port: 5432,
 
 }
 
-const client = new Client(connectionData)
+const client = new Client(connectionData);
 
-app.get("/", (req, res) => {
-  res.send("Hello World!");
-});
-
-app.listen(8000, () => {
-  console.log("Example app listening on port 8000!");
-});
+client.connect()
+  .then(() => {
+    console.log("Conexión exitosa a PostgreSQL");
+    // Realiza cualquier otra operación que necesites aquí
+  })
+  .catch(err => {
+    console.error("Error al conectar a PostgreSQL:", err);
+  });
