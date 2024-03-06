@@ -3,7 +3,7 @@ const data_connection = {
     port: 5432,
     database: 'Sakila',
     user: 'postgres',
-    password: '8865',
+    password: '6619csh2018',
 }
 
 module.exports = data_connection;
