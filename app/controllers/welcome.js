@@ -7,11 +7,9 @@ const db = require('../database/dbconfig');
 const client = new Client(db);
 client.connect();
 
-// Middleware para servir archivos estáticos desde la carpeta AdminLTE-3.2.0
 router.use(express.static(path.join(__dirname, '../AdminLTE-3.2.0')));
 
 router.get('/', (req, res) => {
-    // Enviando el archivo index.html como respuesta al cliente
     res.sendFile(path.join(__dirname, '../AdminLTE-3.2.0/index.html'));
 });
 
