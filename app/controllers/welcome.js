@@ -1,16 +1,22 @@
-const {Client} = require('pg');
+const { Client } = require('pg');
 const express = require('express');
+const path = require('path');
 const router = express.Router();
 const db = require('../database/dbconfig');
 
 const client = new Client(db);
-client.connect()
+client.connect();
+
+// Middleware para servir archivos estáticos desde la carpeta AdminLTE-3.2.0
+router.use(express.static(path.join(__dirname, '../AdminLTE-3.2.0')));
 
 router.get('/', (req, res) => {
-    res.send('Welcome to the Sakila API!');
+    // Enviando el archivo index.html como respuesta al cliente
+    res.sendFile(path.join(__dirname, '../AdminLTE-3.2.0/index.html'));
 });
 
 module.exports = router;
+
 
 // PUT /films/:id
 // router.put('/films/:id', async (req, res) => {
