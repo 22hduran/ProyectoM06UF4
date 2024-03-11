@@ -1,9 +1,9 @@
 const data_connection = {
     host: 'localhost',
     port: 5432,
-    database: 'Sakila',
-    user: 'postgres',
-    password: '6619csh2018',
+    database: 'sakila',
+    user: 'raul',
+    password: '1234',
 }
 
 module.exports = data_connection;
