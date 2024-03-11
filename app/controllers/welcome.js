@@ -17,7 +17,6 @@ router.get('/', (req, res) => {
 
 module.exports = router;
 
-
 // PUT /films/:id
 // router.put('/films/:id', async (req, res) => {
 //     const { id } = req.params;
