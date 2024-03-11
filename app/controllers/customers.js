@@ -3,11 +3,11 @@ const router = express.Router();
 const { Client } = require('pg');
 const db = require('../database/dbconfig');
 
-const client = new Client(db);
 
 router.get('/', async (req, res) => {
+    const client = new Client(db);
     try {
-        await client.connect();
+        client.connect();
         const result = await client.query('SELECT * FROM customer');
         
         const customers = result.rows;
@@ -17,7 +17,9 @@ router.get('/', async (req, res) => {
         console.error(error);
         res.status(500).json({ message: 'Internal server error' });
     } finally {
-        await client.end();
+        res.on('finish', () => {
+            client.end();
+        });
     }
 });
 

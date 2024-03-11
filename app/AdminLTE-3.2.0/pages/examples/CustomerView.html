@@ -13,6 +13,23 @@
   <link rel="stylesheet" href="../../plugins/fontawesome-free/css/all.min.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="../../dist/css/adminlte.min.css">
+  <style>
+    #customersTable {
+        border-collapse: collapse;
+        width: 100%;
+    }
+    #customersTable th, #customersTable td {
+        padding: 8px;
+        text-align: left;
+    }
+    #customersTable tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+    #customersTable th {
+        background-color: #4c56af;
+        color: white;
+    }
+</style>
 </head>
 
 <body class="hold-transition sidebar-mini">
@@ -129,8 +146,12 @@
               <ol class="breadcrumb float-sm-right">
                 <li class="breadcrumb-item"><a href="#">Inicio</a></li>
                 <li class="breadcrumb-item active">CRUD Customer</li>
-              </ol>
+              </ol> <br> 
+              <ol>
+              <button style="margin-left: 540px;">ADD CUSTOMER</button>
+              </ol>          
             </div>
+
           </div>
         </div><!-- /.container-fluid -->
       </section>
@@ -150,7 +171,21 @@
             </div>
           </div>
           <div class="card-body">
-            <form>
+            <table id="customersTable">
+              <thead>
+                  <tr>
+                      <th>Customer ID</th>
+                      <th>First name</th>
+                      <th>Last name</th>
+                      <th>Email</th>
+                      <th>Adress ID</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  
+              </tbody>
+          </table>
+            <!-- <form>
               <label for="id_tienda">Tienda:</label><br>
               <select name="" id="">
                 <option value="1">Tienda 1</option>
@@ -170,11 +205,7 @@
               <input type="text" id="direccion" name="direccion" required><br><br>
 
               <input type="submit" value="Enviar">
-            </form>
-          </div>
-          <!-- /.card-body -->
-          <div class="card-footer">
-            Crea un usuario
+            </form> -->
           </div>
           <!-- /.card-footer-->
         </div>
@@ -184,13 +215,6 @@
     </div>
     <!-- /.content-wrapper -->
 
-    <footer class="main-footer">
-      <div class="float-right d-none d-sm-block">
-        <b>Version</b> 3.2.0
-      </div>
-      <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights reserved.
-    </footer>
-
     <!-- Control Sidebar -->
     <aside class="control-sidebar control-sidebar-dark">
       <!-- Control sidebar content goes here -->
@@ -199,6 +223,22 @@
   </div>
   <!-- ./wrapper -->
 
+  <script>
+    fetch('/customers')
+        .then(response => response.json())
+        .then(customers => {
+            const table = document.getElementById('customersTable').getElementsByTagName('tbody')[0];
+            customers.forEach(customer => {
+                const row = table.insertRow();
+                row.insertCell(0).textContent = customer.customer_id;
+                row.insertCell(1).textContent = customer.first_name;
+                row.insertCell(2).textContent = customer.last_name;
+                row.insertCell(3).textContent = customer.email;
+                row.insertCell(4).textContent = customer.adress_id;
+            });
+        })
+        .catch(error => console.error('Error fetching customers:', error));
+</script>
   <!-- jQuery -->
   <script src="../../plugins/jquery/jquery.min.js"></script>
   <!-- Bootstrap 4 -->
