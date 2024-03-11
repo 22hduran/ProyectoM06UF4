@@ -3,6 +3,7 @@ const router = express.Router();
 const { Client } = require('pg');
 const db = require('../database/dbconfig');
 
+router.use(express.urlencoded({ extended: true }));
 
 router.get('/', async (req, res) => {
     const client = new Client(db); 
@@ -12,7 +13,7 @@ router.get('/', async (req, res) => {
         let take = req.query.take || 50;
         
         const result = await client.query(`SELECT * FROM film LIMIT ${take} OFFSET ${skip}`);
-        
+
         const films = result.rows;
         res.json(films);
       
@@ -26,21 +27,16 @@ router.get('/', async (req, res) => {
 
 router.post('/crear', async (req, res) => {
     const { title, description, release_year, language_id, rental_duration, rental_rate, length, replacement_cost } = req.body;
-
-    // Validar los datos recibidos
-    if (!title || !description || !release_year || !language_id || !rental_duration || !rental_rate || !length || !replacement_cost) {
-        return res.status(400).json({ message: 'Todos los campos son obligatorios' });
-    }
+    console.log(req.body);
 
     const client = new Client(db);
     try {
-        client.connect();
-
-        // Insertar nueva película en la base de datos
+        await client.connect();
         const result = await client.query('INSERT INTO film (title, description, release_year, language_id, rental_duration, rental_rate, length, replacement_cost) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *', 
             [title, description, release_year, language_id, rental_duration, rental_rate, length, replacement_cost]);
+        console.log('new film: ' + result.json());
 
-        res.status(201).json(result.rows[0]); // Devolver la nueva película creada
+        res.status(201).json(result.rows[0]);
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Error al agregar la película' });
@@ -48,6 +44,7 @@ router.post('/crear', async (req, res) => {
         client.end();
     }
 });
+
 
 router.delete('/:id', async (req, res) => {
     const { id } = req.params;
