@@ -25,6 +25,34 @@
       background-color: #4CAF50;
       color: white;
     }
+
+    .popup {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: white;
+      padding: 20px;
+      border: 1px solid #ccc;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      z-index: 9999;
+    }
+
+    .overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 9998;
+    }
+
+    .popup-trigger {
+      margin-left: 480px;
+    }
   </style>
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet"
@@ -241,7 +269,10 @@
               <ol class="breadcrumb float-sm-right">
                 <li class="breadcrumb-item"><a href="#">Inicio</a></li>
                 <li class="breadcrumb-item active">FilmView</li>
-              </ol>
+              </ol><br> 
+              <ol>
+              <button class="popup-trigger">ADD FILM</button>
+              </ol>     
             </div>
           </div>
         </div><!-- /.container-fluid -->
@@ -265,6 +296,33 @@
           </tbody>
         </table>
       </section>
+
+
+
+      <div class="overlay" id="overlay"></div>
+            <div class="popup" id="popup">
+              <form>
+                <label for="id_tienda">Tienda:</label><br>
+                <select name="" id="">
+                  <option value="1">Tienda 1</option>
+                  <option value="2">Tienda 2</option>
+                </select><br><br>
+
+                <label for="nombre">Nombre:</label><br>
+                <input type="text" id="nombre" name="nombre" required><br><br>
+
+                <label for="apellido">Apellido:</label><br>
+                <input type="text" id="apellido" name="apellido" required><br><br>
+
+                <label for="email">Email:</label><br>
+                <input type="email" id="email" name="email" required><br><br>
+
+                <label for="direccion">Dirección:</label><br>
+                <input type="text" id="direccion" name="direccion" required><br><br>
+
+                <input type="submit" value="Enviar">
+              </form>
+            </div>
       <script>
         fetch('/films?skip=0&take=10')
           .then(response => response.json())
@@ -284,7 +342,7 @@
 
               //Editar
               const editFilm = document.createElement('button');
-              editFilm.textContent = '🔩';
+              editFilm.textContent = '✏️';
               editFilm.addEventListener('click', () => {
                 window.location.href = `/editar?id=${film.film_id}`;
               });
@@ -311,6 +369,29 @@
           })
           .catch(error => console.error('Error fetching films:', error));
     </script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const popup = document.getElementById('popup');
+    const overlay = document.getElementById('overlay');
+
+    function showPopup() {
+      popup.style.display = 'block';
+      overlay.style.display = 'block';
+    }
+
+    function hidePopup() {
+      popup.style.display = 'none';
+      overlay.style.display = 'none';
+    }
+
+    // Evento para mostrar el popup cuando se hace clic en el botón
+    document.querySelector('.popup-trigger').addEventListener('click', showPopup);
+
+    // Evento para ocultar el popup cuando se hace clic en el overlay
+    document.getElementById('overlay').addEventListener('click', hidePopup);
+  });
+</script>
     
     </div>
 
