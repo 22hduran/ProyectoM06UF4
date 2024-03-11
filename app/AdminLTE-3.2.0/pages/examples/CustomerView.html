@@ -13,6 +13,51 @@
   <link rel="stylesheet" href="../../plugins/fontawesome-free/css/all.min.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="../../dist/css/adminlte.min.css">
+  <style>
+    #customersTable {
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    #customersTable th,
+    #customersTable td {
+      padding: 8px;
+      text-align: left;
+    }
+
+    #customersTable tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+
+    #customersTable th {
+      background-color: #4c56af;
+      color: white;
+    }
+
+    .popup {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: white;
+      padding: 20px;
+      border: 1px solid #ccc;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      z-index: 9999;
+    }
+
+    .overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 9998;
+    }
+  </style>
 </head>
 
 <body class="hold-transition sidebar-mini">
@@ -129,8 +174,12 @@
               <ol class="breadcrumb float-sm-right">
                 <li class="breadcrumb-item"><a href="#">Inicio</a></li>
                 <li class="breadcrumb-item active">CRUD Customer</li>
+              </ol> <br>
+              <ol>
+                <button class="popup-trigger">ADD CUSTOMER</button>
               </ol>
             </div>
+
           </div>
         </div><!-- /.container-fluid -->
       </section>
@@ -150,46 +199,56 @@
             </div>
           </div>
           <div class="card-body">
-            <form>
-              <label for="id_tienda">Tienda:</label><br>
-              <select name="" id="">
-                <option value="1">Tienda 1</option>
-                <option value="2">Tienda 2</option>
-              </select><br><br>
+            <table id="customersTable">
+              <thead>
+                <tr>
+                  <th>Customer ID</th>
+                  <th>First name</th>
+                  <th>Last name</th>
+                  <th>Email</th>
+                  <th>Adress ID</th>
+                </tr>
+              </thead>
+              <tbody>
 
-              <label for="nombre">Nombre:</label><br>
-              <input type="text" id="nombre" name="nombre" required><br><br>
+              </tbody>
+            </table>
+            
 
-              <label for="apellido">Apellido:</label><br>
-              <input type="text" id="apellido" name="apellido" required><br><br>
 
-              <label for="email">Email:</label><br>
-              <input type="email" id="email" name="email" required><br><br>
-
-              <label for="direccion">Dirección:</label><br>
-              <input type="text" id="direccion" name="direccion" required><br><br>
-
-              <input type="submit" value="Enviar">
-            </form>
-          </div>
-          <!-- /.card-body -->
-          <div class="card-footer">
-            Crea un usuario
           </div>
           <!-- /.card-footer-->
         </div>
+
+        <div class="overlay" id="overlay"></div>
+            <div class="popup" id="popup">
+              <form>
+                <label for="id_tienda">Tienda:</label><br>
+                <select name="" id="">
+                  <option value="1">Tienda 1</option>
+                  <option value="2">Tienda 2</option>
+                </select><br><br>
+
+                <label for="nombre">Nombre:</label><br>
+                <input type="text" id="nombre" name="nombre" required><br><br>
+
+                <label for="apellido">Apellido:</label><br>
+                <input type="text" id="apellido" name="apellido" required><br><br>
+
+                <label for="email">Email:</label><br>
+                <input type="email" id="email" name="email" required><br><br>
+
+                <label for="direccion">Dirección:</label><br>
+                <input type="text" id="direccion" name="direccion" required><br><br>
+
+                <input type="submit" value="Enviar">
+              </form>
+            </div>
         <!-- /.card -->
       </section>
       <!-- /.content -->
     </div>
     <!-- /.content-wrapper -->
-
-    <footer class="main-footer">
-      <div class="float-right d-none d-sm-block">
-        <b>Version</b> 3.2.0
-      </div>
-      <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights reserved.
-    </footer>
 
     <!-- Control Sidebar -->
     <aside class="control-sidebar control-sidebar-dark">
@@ -199,6 +258,45 @@
   </div>
   <!-- ./wrapper -->
 
+  <script>
+    fetch('/customers')
+      .then(response => response.json())
+      .then(customers => {
+        const table = document.getElementById('customersTable').getElementsByTagName('tbody')[0];
+        customers.forEach(customer => {
+          const row = table.insertRow();
+          row.insertCell(0).textContent = customer.customer_id;
+          row.insertCell(1).textContent = customer.first_name;
+          row.insertCell(2).textContent = customer.last_name;
+          row.insertCell(3).textContent = customer.email;
+          row.insertCell(4).textContent = customer.adress_id;
+        });
+      })
+      .catch(error => console.error('Error fetching customers:', error));
+  </script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const popup = document.getElementById('popup');
+      const overlay = document.getElementById('overlay');
+
+      function showPopup() {
+        popup.style.display = 'block';
+        overlay.style.display = 'block';
+      }
+
+      function hidePopup() {
+        popup.style.display = 'none';
+        overlay.style.display = 'none';
+      }
+
+      // Evento para mostrar el popup cuando se hace clic en el botón
+      document.querySelector('.popup-trigger').addEventListener('click', showPopup);
+
+      // Evento para ocultar el popup cuando se hace clic en el overlay
+      document.getElementById('overlay').addEventListener('click', hidePopup);
+    });
+  </script>
   <!-- jQuery -->
   <script src="../../plugins/jquery/jquery.min.js"></script>
   <!-- Bootstrap 4 -->

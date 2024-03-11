@@ -5,14 +5,14 @@ const db = require('../database/dbconfig');
 
 
 router.get('/', async (req, res) => {
-    const client = new Client(db);
+    const client = new Client(db); 
     try {
         client.connect();
-        const result = await client.query('SELECT * FROM customer');
+        const result = await client.query('SELECT * FROM staff');
         
-        const customers = result.rows;
-        res.json(customers);
-
+        const staff = result.rows;
+        res.json(staff);
+      
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Internal server error' });
@@ -24,3 +24,4 @@ router.get('/', async (req, res) => {
 });
 
 module.exports = router;
+///staff?skip=50&take=50
