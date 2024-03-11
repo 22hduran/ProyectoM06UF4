@@ -45,6 +45,33 @@ router.post('/crear', async (req, res) => {
     }
 });
 
+router.put('/:id', async (req, res) => {
+    const { id } = req.params;
+    const { title, description, release_year, language_id, rental_duration, rental_rate, length, replacement_cost } = req.body;
+
+    const client = new Client(db);
+    try {
+        await client.connect();
+
+        const existingFilm = await client.query('SELECT * FROM film WHERE film_id = $1', [id]);
+        if (existingFilm.rows.length === 0) {
+            return res.status(404).json({ message: 'Película no encontrada' });
+        }
+
+        const result = await client.query(
+            'UPDATE film SET title = $1, description = $2, release_year = $3, language_id = $4, rental_duration = $5, rental_rate = $6, length = $7, replacement_cost = $8 WHERE film_id = $9 RETURNING *',
+            [title, description, release_year, language_id, rental_duration, rental_rate, length, replacement_cost, id]
+        );
+
+        res.json(result.rows[0]);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error interno del servidor' });
+    } finally {
+        client.end();
+    }
+});
+
 
 router.delete('/:id', async (req, res) => {
     const { id } = req.params;
