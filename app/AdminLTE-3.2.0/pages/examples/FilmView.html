@@ -53,6 +53,30 @@
     .popup-trigger {
       margin-left: 480px;
     }
+
+    .popupEdit {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: white;
+      padding: 30px;
+      border: 1px solid #ccc;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      z-index: 9999;
+    }
+
+    .overlayEdit {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 9998;
+    }
   </style>
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet"
@@ -285,7 +309,7 @@
             <tr>
               <th>Film ID</th>
               <th>Title</th>
-              <th>Description</th>
+              <th style="width: 320px;">Description</th>
               <th>Release Year</th>
               <th>Cost</th>
               <th>CRUD</th>
@@ -339,94 +363,159 @@
         </form>
       </div>
 
-      <script>
-        fetch('/films?skip=0&take=10')
-          .then(response => response.json())
-          .then(films => {
-            const table = document.getElementById('filmsTable').getElementsByTagName('tbody')[0];
-            films.forEach(film => {
-              const row = table.insertRow();
-              row.dataset.filmId = film.film_id;
-              row.insertCell(0).textContent = film.film_id;
-              row.insertCell(1).textContent = film.title;
-              row.insertCell(2).textContent = film.description;
-              row.insertCell(3).textContent = film.release_year;
-              row.insertCell(4).textContent = film.replacement_cost;
-              const crudCell = row.insertCell(5);
+      <div class="overlayEdit" id="overlayEdit"></div>
+      <div class="popupEdit" id="popupEdit">
+        <form class="popup-form-edit" id="filmFormEdit">
+          <label for="title">Title:</label>
+          <input type="text" id="title" name="title" required>
+          <br><br>
 
-              const crudButtonsContainer = document.createElement('div');
+          <label for="description">Description:</label>
+          <textarea id="description" name="description" required></textarea>
+          <br><br>
 
-              //Editar
-              const editFilm = document.createElement('button');
-              editFilm.textContent = '✏️';
-              editFilm.addEventListener('click', () => {
-                window.location.href = `/editar?id=${film.film_id}`;
-              });
-              crudButtonsContainer.appendChild(editFilm);
+          <label for="release_year">Release Year:</label>
+          <input type="number" id="release_year" name="release_year" required>
+          <br><br>
 
-              //Eliminar
-              const deleteFilm = document.createElement('button');
-              deleteFilm.textContent = '🗑️';
-              deleteFilm.addEventListener('click', () => {
-                const filmId = row.dataset.filmId;
-                fetch(`/films/${filmId}`, { method: 'DELETE' })
-                  .then(res => {
-                    if (res.ok) {
-                      table.deleteRow(row.rowIndex);
-                    } else {
-                      throw new Error('Error al eliminar el film');
-                    }
-                  })
-                  .catch(error => console.error('Error al obtener y eliminar el film:', error));
-              });
-              crudButtonsContainer.appendChild(deleteFilm);
-              crudCell.appendChild(crudButtonsContainer);
-            });
-          })
-          .catch(error => console.error('Error fetching films:', error));
-      </script>
+          <label for="language_id">Language:</label>
+          <select id="language_id" name="language_id" required>
+            <option value="1">English</option>
+            <option value="2">Spanish</option>
+          </select>
+          <br><br>
+
+          <label for="rental_duration">Rental Duration (in days):</label>
+          <input type="number" id="rental_duration" name="rental_duration" required>
+          <br><br>
+
+          <label for="rental_rate">Rental Rate:</label>
+          <input type="text" id="rental_rate" name="rental_rate" required>
+          <br><br>
+
+          <label for="length">Length (in minutes):</label>
+          <input type="number" id="length" name="length" required>
+          <br><br>
+
+          <label for="replacement_cost">Replacement Cost:</label>
+          <input type="text" id="replacement_cost" name="replacement_cost" required>
+          <br><br>
+
+          <input type="submit" value="Add Film">
+        </form>
+      </div>
+
+
 
       <script>
         document.addEventListener('DOMContentLoaded', function () {
+          fetch('/films?skip=0&take=10')
+            .then(response => response.json())
+            .then(films => {
+              const table = document.getElementById('filmsTable').getElementsByTagName('tbody')[0];
+              films.forEach(film => {
+                const row = table.insertRow();
+                row.dataset.filmId = film.film_id;
+                row.insertCell(0).textContent = film.film_id;
+                row.insertCell(1).textContent = film.title;
+                row.insertCell(2).textContent = film.description;
+                row.insertCell(3).textContent = film.release_year;
+                row.insertCell(4).textContent = film.replacement_cost;
+                const crudCell = row.insertCell(5);
+      
+                const crudButtonsContainer = document.createElement('div');
+      
+                //Editar
+                const editFilm = document.createElement('button');
+                editFilm.textContent = '✏️';
+                editFilm.classList.add('popup-trigger-edit');
+                crudButtonsContainer.appendChild(editFilm);
+      
+                //Eliminar
+                const deleteFilm = document.createElement('button');
+                deleteFilm.textContent = '🗑️';
+                deleteFilm.addEventListener('click', () => {
+                  const filmId = row.dataset.filmId;
+                  fetch(`/films/${filmId}`, { method: 'DELETE' })
+                    .then(res => {
+                      if (res.ok) {
+                        table.deleteRow(row.rowIndex);
+                      } else {
+                        throw new Error('Error al eliminar el film');
+                      }
+                    })
+                    .catch(error => console.error('Error al obtener y eliminar el film:', error));
+                });
+                crudButtonsContainer.appendChild(deleteFilm);
+                crudCell.appendChild(crudButtonsContainer);
+              });
+            })
+            .catch(error => console.error('Error fetching films:', error));
+      
           const popup = document.getElementById('popup');
           const overlay = document.getElementById('overlay');
-
+      
           function showPopup() {
             popup.style.display = 'block';
             overlay.style.display = 'block';
           }
-
+      
           function hidePopup() {
             popup.style.display = 'none';
             overlay.style.display = 'none';
           }
-
+      
           document.querySelector('.popup-trigger').addEventListener('click', showPopup);
-
+      
           document.getElementById('overlay').addEventListener('click', hidePopup);
-
+      
+      
+          const popupEdit = document.getElementById('popupEdit');
+          const overlayEdit = document.getElementById('overlayEdit');
+      
+          function showPopupEdit() {
+            popupEdit.style.display = 'block';
+            overlayEdit.style.display = 'block';
+          }
+      
+          function hidePopupEdit() {
+            popupEdit.style.display = 'none';
+            overlayEdit.style.display = 'none';
+          }
+      
+          // Agrega el evento de clic al contenedor de los botones de edición
+          document.getElementById('filmsTable').addEventListener('click', function(event) {
+            // Verifica si el objetivo del clic fue un botón con la clase popup-trigger-edit
+            if (event.target.classList.contains('popup-trigger-edit')) {
+              // Si fue así, muestra el popup de edición
+              showPopupEdit();
+            }
+          });
+      
+          document.getElementById('overlayEdit').addEventListener('click', hidePopupEdit);
+      
           document.getElementById('filmForm').addEventListener('submit', function (event) {
             event.preventDefault();
-
+      
             const formData = {
-              title: document.getElementById('title').value, 
-              description: document.getElementById('description').value, 
-              release_year: document.getElementById('release_year').value, 
-              language_id: document.getElementById('language_id').value, 
-              rental_duration: document.getElementById('rental_duration').value, 
-              rental_rate: document.getElementById('rental_rate').value, 
-              length: document.getElementById('length').value, 
+              title: document.getElementById('title').value,
+              description: document.getElementById('description').value,
+              release_year: document.getElementById('release_year').value,
+              language_id: document.getElementById('language_id').value,
+              rental_duration: document.getElementById('rental_duration').value,
+              rental_rate: document.getElementById('rental_rate').value,
+              length: document.getElementById('length').value,
               replacement_cost: document.getElementById('replacement_cost').value
             };
             console.log(formData);
-
+      
             fetch('/films/crear', {
-              method: 'POST',
-              headers: {
-                'content-type': 'application/json',
-              },
-              body: JSON.stringify(formData)
-            })
+                method: 'POST',
+                headers: {
+                  'content-type': 'application/json',
+                },
+                body: JSON.stringify(formData)
+              })
               .then(response => {
                 if (response.ok) {
                   hidePopup();
@@ -441,7 +530,7 @@
         });
 
       </script>
-
+      
     </div>
 
     <footer class="main-footer">
