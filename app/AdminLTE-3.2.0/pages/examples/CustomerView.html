@@ -41,8 +41,9 @@
       left: 50%;
       transform: translate(-50%, -50%);
       background-color: white;
-      padding: 20px;
+      padding: 50px;
       border: 1px solid #ccc;
+      border-radius: 20px;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
       z-index: 9999;
     }
@@ -203,10 +204,11 @@
               <thead>
                 <tr>
                   <th>Customer ID</th>
+                  <th>Store ID</th>
                   <th>First name</th>
                   <th>Last name</th>
                   <th>Email</th>
-                  <th>Adress ID</th>
+                  <th>Adress</th>
                 </tr>
               </thead>
               <tbody>
@@ -222,26 +224,28 @@
 
         <div class="overlay" id="overlay"></div>
             <div class="popup" id="popup">
-              <form>
-                <label for="id_tienda">Tienda:</label><br>
-                <select name="" id="">
-                  <option value="1">Tienda 1</option>
-                  <option value="2">Tienda 2</option>
-                </select><br><br>
-
-                <label for="nombre">Nombre:</label><br>
-                <input type="text" id="nombre" name="nombre" required><br><br>
-
-                <label for="apellido">Apellido:</label><br>
-                <input type="text" id="apellido" name="apellido" required><br><br>
-
-                <label for="email">Email:</label><br>
-                <input type="email" id="email" name="email" required><br><br>
-
-                <label for="direccion">Dirección:</label><br>
-                <input type="text" id="direccion" name="direccion" required><br><br>
-
-                <input type="submit" value="Enviar">
+              <form style="width: 500px;">
+                <div class="mb-3">
+                  <label for="first_name" class="form-label">Customer ID</label>
+                  <input type="text" class="form-control " id="first_name" >
+                </div>
+                <div class="mb-3">
+                  <label for="last_name" class="form-label">Store ID</label>
+                  <input type="text" class="form-control" id="last_name">
+                </div>
+                <div class="mb-3">
+                  <label for="last_name" class="form-label">First name</label>
+                  <input type="text" class="form-control" id="last_name">
+                </div>
+                <div class="mb-3">
+                  <label for="store" class="form-label">Email</label>
+                  <input type="text" class="form-control" id="store">
+                </div>
+                <div class="mb-3">
+                  <label for="exampleInputEmail1" class="form-label">Adress ID</label>
+                  <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">              
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
               </form>
             </div>
         <!-- /.card -->
@@ -266,10 +270,11 @@
         customers.forEach(customer => {
           const row = table.insertRow();
           row.insertCell(0).textContent = customer.customer_id;
-          row.insertCell(1).textContent = customer.first_name;
-          row.insertCell(2).textContent = customer.last_name;
-          row.insertCell(3).textContent = customer.email;
-          row.insertCell(4).textContent = customer.adress_id;
+          row.insertCell(1).textContent = customer.store_id;
+          row.insertCell(2).textContent = customer.first_name;
+          row.insertCell(3).textContent = customer.last_name;
+          row.insertCell(4).textContent = customer.email;
+          row.insertCell(5).textContent = customer.address_id;
         });
       })
       .catch(error => console.error('Error fetching customers:', error));
