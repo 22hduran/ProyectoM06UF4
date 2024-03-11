@@ -33,6 +33,30 @@
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     z-index: 1000;
   }
+  .popup {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: white;
+      padding: 70px;
+      border: 1px solid #ccc;
+      border-radius: 20px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      z-index: 9999;
+    }
+
+    .overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 9998;
+    }
 </style>
 
   <!-- Google Font: Source Sans Pro -->
@@ -273,18 +297,42 @@
 
     <!-- Body -->
     <section class="content">
-      <button class="btn btn-primary mb-3" id="btn-create">Create</button>
+      <button class="btn btn-primary mb-3 popup-trigger" id="btn-create">Create</button>
 
-      <div id="formulario">
-        <h2>Formulario</h2>
-        <form>
-          <label for="nombre">Nombre:</label>
-          <input type="text" id="nombre" name="nombre" required><br><br>
-          <label for="email">Email:</label>
-          <input type="email" id="email" name="email" required><br><br>
-          <button type="submit">Enviar</button>
-        </form>
-      </div>
+      <div class="overlay" id="overlay"></div>
+            <div class="popup" id="popup">
+              <form style="width: 500px;">
+                <div class="mb-3">
+                  <label for="first_name" class="form-label">First name</label>
+                  <input type="text" class="form-control " id="first_name" >
+                </div>
+                <div class="mb-3">
+                  <label for="last_name" class="form-label">Last name</label>
+                  <input type="text" class="form-control" id="last_name">
+                </div>
+                <div class="mb-3">
+                  <label for="last_name" class="form-label">Address</label>
+                  <input type="text" class="form-control" id="last_name">
+                </div>
+                <div class="mb-3">
+                  <label for="store" class="form-label">Store</label>
+                  <input type="text" class="form-control" id="store">
+                </div>
+                <div class="mb-3">
+                  <label for="exampleInputEmail1" class="form-label">Email address</label>
+                  <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">              
+                </div>
+                <div class="mb-3">
+                  <label for="active" class="form-label">Active</label>
+                  <input type="text" class="form-control" id="active">
+                </div>
+                <div class="mb-3">
+                  <label for="username" class="form-label">Username</label>
+                  <input type="text" class="form-control" id="username">              
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+              </form>
+            </div>
 
       <table id="filmsTable">
           <thead>
@@ -355,12 +403,26 @@
 
 
 
-        function showCreate() {
-          
-          document.getElementById("formulario").style.display = "block";
-        }
+      document.addEventListener('DOMContentLoaded', function () {
+      const popup = document.getElementById('popup');
+      const overlay = document.getElementById('overlay');
 
-        document.getElementById('btn-create').addEventListener('click', showCreate);
+      function showPopup() {
+        popup.style.display = 'block';
+        overlay.style.display = 'block';
+      }
+
+      function hidePopup() {
+        popup.style.display = 'none';
+        overlay.style.display = 'none';
+      }
+
+      // Evento para mostrar el popup cuando se hace clic en el botón
+      document.querySelector('.popup-trigger').addEventListener('click', showPopup);
+
+      // Evento para ocultar el popup cuando se hace clic en el overlay
+      document.getElementById('overlay').addEventListener('click', hidePopup);
+    });
 
 
 </script>
