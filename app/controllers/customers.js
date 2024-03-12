@@ -36,7 +36,7 @@ router.post('/crear', async (req, res) => {
             [store_id, first_name, last_name, email, address_id]
         );
 
-        const newCustomer = result.rows[0]; // Access the first row of the result
+        const newCustomer = result.rows[0]; 
 
         console.log('new customer:', newCustomer);
         res.status(201).json(newCustomer);
@@ -55,8 +55,8 @@ router.get('/addresses', async (req, res) => {
     try {
         client.connect();
         
-        const result = await client.query('SELECT address_id FROM address');
-        const addresses = result.rows.map(row => row.address_id);
+        const result = await client.query('SELECT address FROM address');
+        const addresses = result.rows.map(row => row.address);
         
         res.json(addresses);
     } catch (error) {

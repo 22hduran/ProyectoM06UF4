@@ -211,7 +211,7 @@
                   <th>Last name</th>
                   <th>Email</th>
                   <th>Adress</th>
-                  <th></th>
+                  <th>CRUD</th>
                 </tr>
               </thead>
               <tbody>
@@ -243,7 +243,7 @@
             <label for="address">Select Address:</label>
             <select id="address_id">
               <option value="">Select an address</option>
-            </select>
+            </select><br>
             <button type="submit" class="btn btn-primary" value="Add customer">Submit</button>
           </form>
         </div>
@@ -402,9 +402,10 @@
 <script>
   $(document).ready(function() {
       $.get('/customers/addresses', function(data) {
+        var counter = 1;
           data.forEach(function(addressId) {
               $('#address_id').append($('<option>', {
-                  value: addressId,
+                  value: counter++,
                   text: addressId
               }));
           });
