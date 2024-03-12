@@ -3,6 +3,7 @@ const router = express.Router();
 const { Client } = require('pg');
 const db = require('../database/dbconfig');
 
+router.use(express.urlencoded({ extended: true }));
 
 router.get('/', async (req, res) => {
     const client = new Client(db); 
