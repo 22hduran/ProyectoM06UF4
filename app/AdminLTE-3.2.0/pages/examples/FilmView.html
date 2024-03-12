@@ -366,38 +366,38 @@
       <div class="popupEdit" id="popupEdit">
         <form class="popup-form-edit" id="filmFormEdit">
           <label for="title">Title:</label>
-          <input type="text" id="title" name="title" required>
+          <input type="text" id="titleEdit" name="title" required>
           <br><br>
 
           <label for="description">Description:</label>
-          <textarea id="description" name="description" required></textarea>
+          <textarea id="descriptionEdit" name="description" required></textarea>
           <br><br>
 
           <label for="release_year">Release Year:</label>
-          <input type="number" id="release_year" name="release_year" required>
+          <input type="number" id="release_yearEdit" name="release_year" required>
           <br><br>
 
           <label for="language_id">Language:</label>
-          <select id="language_id" name="language_id" required>
+          <select id="language_idEdit" name="language_id" required>
             <option value="1">English</option>
             <option value="2">Spanish</option>
           </select>
           <br><br>
 
           <label for="rental_duration">Rental Duration (in days):</label>
-          <input type="number" id="rental_duration" name="rental_duration" required>
+          <input type="number" id="rental_durationEdit" name="rental_duration" required>
           <br><br>
 
           <label for="rental_rate">Rental Rate:</label>
-          <input type="text" id="rental_rate" name="rental_rate" required>
+          <input type="text" id="rental_rateEdit" name="rental_rate" required>
           <br><br>
 
           <label for="length">Length (in minutes):</label>
-          <input type="number" id="length" name="length" required>
+          <input type="number" id="lengthEdit" name="length" required>
           <br><br>
 
           <label for="replacement_cost">Replacement Cost:</label>
-          <input type="text" id="replacement_cost" name="replacement_cost" required>
+          <input type="text" id="replacement_costEdit" name="replacement_cost" required>
           <br><br>
 
           <input type="submit" value="Add Film">
@@ -408,6 +408,32 @@
 
       <script>
         document.addEventListener('DOMContentLoaded', function () {
+
+          const popup = document.getElementById('popup');
+          const overlay = document.getElementById('overlay');
+          const popupEdit = document.getElementById('popupEdit');
+          const overlayEdit = document.getElementById('overlayEdit');
+
+          function showPopup() {
+            popup.style.display = 'block';
+            overlay.style.display = 'block';
+          }
+
+          function hidePopup() {
+            popup.style.display = 'none';
+            overlay.style.display = 'none';
+          }
+
+          function hidePopupEdit() {
+            popupEdit.style.display = 'none';
+            overlayEdit.style.display = 'none';
+          }
+
+          document.querySelector('.popup-trigger').addEventListener('click', showPopup);
+          document.getElementById('overlay').addEventListener('click', hidePopup);
+          document.getElementById('overlayEdit').addEventListener('click', hidePopupEdit);
+
+          // Mostrar Films GET
           fetch('/films?skip=0&take=10')
             .then(response => response.json())
             .then(films => {
@@ -421,15 +447,15 @@
                 row.insertCell(3).textContent = film.release_year;
                 row.insertCell(4).textContent = film.replacement_cost;
                 const crudCell = row.insertCell(5);
-      
+
                 const crudButtonsContainer = document.createElement('div');
-      
+
                 //Editar
                 const editFilm = document.createElement('button');
                 editFilm.textContent = '✏️';
                 editFilm.classList.add('popup-trigger-edit');
                 crudButtonsContainer.appendChild(editFilm);
-      
+
                 //Eliminar
                 const deleteFilm = document.createElement('button');
                 deleteFilm.textContent = '🗑️';
@@ -450,52 +476,11 @@
               });
             })
             .catch(error => console.error('Error fetching films:', error));
-      
-          const popup = document.getElementById('popup');
-          const overlay = document.getElementById('overlay');
-      
-          function showPopup() {
-            popup.style.display = 'block';
-            overlay.style.display = 'block';
-          }
-      
-          function hidePopup() {
-            popup.style.display = 'none';
-            overlay.style.display = 'none';
-          }
-      
-          document.querySelector('.popup-trigger').addEventListener('click', showPopup);
-      
-          document.getElementById('overlay').addEventListener('click', hidePopup);
-      
-      
-          const popupEdit = document.getElementById('popupEdit');
-          const overlayEdit = document.getElementById('overlayEdit');
-      
-          function showPopupEdit() {
-            popupEdit.style.display = 'block';
-            overlayEdit.style.display = 'block';
-          }
-      
-          function hidePopupEdit() {
-            popupEdit.style.display = 'none';
-            overlayEdit.style.display = 'none';
-          }
-      
-          // Agrega el evento de clic al contenedor de los botones de edición
-          document.getElementById('filmsTable').addEventListener('click', function(event) {
-            // Verifica si el objetivo del clic fue un botón con la clase popup-trigger-edit
-            if (event.target.classList.contains('popup-trigger-edit')) {
-              // Si fue así, muestra el popup de edición
-              showPopupEdit();
-            }
-          });
-      
-          document.getElementById('overlayEdit').addEventListener('click', hidePopupEdit);
-      
+
+          // Crear Films POST
           document.getElementById('filmForm').addEventListener('submit', function (event) {
             event.preventDefault();
-      
+
             const formData = {
               title: document.getElementById('title').value,
               description: document.getElementById('description').value,
@@ -507,14 +492,14 @@
               replacement_cost: document.getElementById('replacement_cost').value
             };
             console.log(formData);
-      
+
             fetch('/films/crear', {
-                method: 'POST',
-                headers: {
-                  'content-type': 'application/json',
-                },
-                body: JSON.stringify(formData)
-              })
+              method: 'POST',
+              headers: {
+                'content-type': 'application/json',
+              },
+              body: JSON.stringify(formData)
+            })
               .then(response => {
                 if (response.ok) {
                   hidePopup();
@@ -525,11 +510,78 @@
               })
               .catch(error => console.error('Error al añadir la película:', error));
           });
-          
+
+          // Editar Films PUT
+          document.getElementById('filmsTable').addEventListener('click', function (event) {
+            if (event.target.classList.contains('popup-trigger-edit')) {
+              showPopupEdit();
+            }
+          });
+
+          let currentFilmId = '';
+
+          function showPopupEdit() {
+            popupEdit.style.display = 'block';
+            overlayEdit.style.display = 'block';
+
+            currentFilmId = event.target.closest('tr').dataset.filmId;
+
+            fetch(`/films/${currentFilmId}`)
+              .then(response => {
+                if (!response.ok) {
+                  throw new Error('Error al obtener los detalles de la película');
+                }
+                return response.json();
+              })
+              .then(film => {
+                document.getElementById('titleEdit').value = film.title;
+                document.getElementById('descriptionEdit').value = film.description;
+                document.getElementById('release_yearEdit').value = film.release_year;
+                document.getElementById('language_idEdit').value = film.language_id;
+                document.getElementById('rental_durationEdit').value = film.rental_duration;
+                document.getElementById('rental_rateEdit').value = film.rental_rate;
+                document.getElementById('lengthEdit').value = film.length;
+                document.getElementById('replacement_costEdit').value = film.replacement_cost;
+              })
+              .catch(error => console.error('Error fetching film details:', error));
+          }
+
+          document.getElementById('filmFormEdit').addEventListener('submit', function (event) {
+            event.preventDefault();
+            
+            const filmId = currentFilmId;
+            console.log('filmId:', filmId);
+            
+            const formDataEdit = {
+              title: document.getElementById('titleEdit').value,
+              description: document.getElementById('descriptionEdit').value,
+              release_year: document.getElementById('release_yearEdit').value,
+              language_id: document.getElementById('language_idEdit').value,
+              rental_duration: document.getElementById('rental_durationEdit').value,
+              rental_rate: document.getElementById('rental_rateEdit').value,
+              length: document.getElementById('lengthEdit').value,
+              replacement_cost: document.getElementById('replacement_costEdit').value
+            }
+
+            fetch(`/films/${filmId}`, {
+              method: 'PUT',
+              headers: {
+                'content-type': 'application/json',
+              },
+              body: JSON.stringify(formDataEdit)
+            })
+              .then(res => {
+                if (!res.ok) {
+                  throw new Error('Error al actualizar los detalles de la película');
+                }
+                console.log('Película actualizada con éxito');
+              })
+              .catch(error => console.error('Error updating film details:', error));
+          })
         });
 
       </script>
-      
+
     </div>
 
     <footer class="main-footer">
