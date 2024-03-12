@@ -26,20 +26,42 @@ router.get('/', async (req, res) => {
 });
 
 router.post('/crear', async (req, res) => {
-    const { store_id, first_name, last_name, email, adress_id, activebool} = req.body;
-    console.log(req.body);
+    const { store_id, first_name, last_name, email, address_id } = req.body;
 
     const client = new Client(db);
     try {
         await client.connect();
-        const result = await client.query('INSERT INTO customer (store_id, first_name, last_name, email, adress_id, activebool) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *', 
-            [store_id, first_name, last_name, email, adress_id, activebool]);
-        console.log('new customer: ' + result.json());
-        
-        res.status(201).json(result.rows[0]);
+        const result = await client.query(
+            'INSERT INTO customer (store_id, first_name, last_name, email, address_id) VALUES ($1, $2, $3, $4, $5) RETURNING *', 
+            [store_id, first_name, last_name, email, address_id]
+        );
+
+        const newCustomer = result.rows[0]; // Access the first row of the result
+
+        console.log('new customer:', newCustomer);
+        res.status(201).json(newCustomer);
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Error al agregar el cliente' });
+    } finally {
+        client.end();
+    }
+});
+
+
+
+router.get('/addresses', async (req, res) => {
+    const client = new Client(db); 
+    try {
+        client.connect();
+        
+        const result = await client.query('SELECT address_id FROM address');
+        const addresses = result.rows.map(row => row.address_id);
+        
+        res.json(addresses);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal server error' });
     } finally {
         client.end();
     }

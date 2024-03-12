@@ -6,12 +6,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>CRUD Customer</title>
 
-  <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet"
     href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-  <!-- Font Awesome -->
   <link rel="stylesheet" href="../../plugins/fontawesome-free/css/all.min.css">
-  <!-- Theme style -->
   <link rel="stylesheet" href="../../dist/css/adminlte.min.css">
   <style>
     #customersTable {
@@ -88,9 +85,7 @@
 <body class="hold-transition sidebar-mini">
 
   <div class="wrapper">
-    <!-- Navbar -->
     <nav class="main-header navbar navbar-expand navbar-white navbar-light">
-      <!-- Left navbar links -->
       <ul class="navbar-nav">
         <li class="nav-item">
           <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
@@ -100,9 +95,7 @@
         </li>
       </ul>
 
-      <!-- Right navbar links -->
       <ul class="navbar-nav ml-auto">
-        <!-- Messages Dropdown Menu -->
         <li class="nav-item">
           <a class="nav-link" data-widget="control-sidebar" data-slide="true" href="#" role="button">
             <i class="fas fa-th-large"></i>
@@ -110,20 +103,15 @@
         </li>
       </ul>
     </nav>
-    <!-- /.navbar -->
 
-    <!-- Main Sidebar Container -->
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
-      <!-- Brand Logo -->
       <a href="../../index.html" class="brand-link">
         <img src="../../dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
           style="opacity: .8">
         <span class="brand-text font-weight-light">AdminLTE 3</span>
       </a>
 
-      <!-- Sidebar -->
       <div class="sidebar">
-        <!-- Sidebar user (optional) -->
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
           <div class="image">
             <img src="https://i.pinimg.com/736x/b2/4f/a4/b24fa4cfb641567e83069dccafabd717.jpg"
@@ -134,7 +122,6 @@
           </div>
         </div>
 
-        <!-- SidebarSearch Form -->
         <div class="form-inline">
           <div class="input-group" data-widget="sidebar-search">
             <input class="form-control form-control-sidebar" type="search" placeholder="Buscar" aria-label="Search">
@@ -146,7 +133,6 @@
           </div>
         </div>
 
-        <!-- Sidebar Menu -->
         <nav class="mt-2">
           <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
             <li class="nav-item">
@@ -181,14 +167,10 @@
             </li>
           </ul>
         </nav>
-        <!-- /.sidebar-menu -->
       </div>
-      <!-- /.sidebar -->
     </aside>
 
-    <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
-      <!-- Content Header (Page header) -->
       <section class="content-header">
         <div class="container-fluid">
           <div class="row mb-2">
@@ -199,25 +181,21 @@
               <ol class="breadcrumb float-sm-right">
                 <li class="breadcrumb-item"><a href="#">Inicio</a></li>
                 <li class="breadcrumb-item active">CRUD Customer</li>
-              </ol> <br>
-              <ol>
-                <button class="popup-trigger">ADD CUSTOMER</button>
               </ol>
             </div>
 
           </div>
-        </div><!-- /.container-fluid -->
+        </div>
       </section>
 
-      <!-- Main content -->
       <section class="content">
 
-        <!-- Default box -->
         <div class="card">
           <div class="card-header">
             <h3 class="card-title">CRUD Customer</h3>
 
             <div class="card-tools">
+              <button class="popup-trigger">ADD CUSTOMER</button>
               <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
                 <i class="fas fa-minus"></i>
               </button>
@@ -233,6 +211,7 @@
                   <th>Last name</th>
                   <th>Email</th>
                   <th>Adress</th>
+                  <th></th>
                 </tr>
               </thead>
               <tbody>
@@ -261,14 +240,10 @@
               <label for="email" class="form-label">Email</label>
               <input type="email" class="form-control" id="email">
             </div>
-            <div class="mb-3">
-              <label for="address" class="form-label">Address ID</label>
-              <input type="text" class="form-control" id="address_id" aria-describedby="emailHelp">
-            </div>
-            <div class="mb-3">
-              <label for="activebool" class="form-label">Activebool</label>
-              <input type="activebool" class="form-control" id="activebool">
-            </div>
+            <label for="address">Select Address:</label>
+            <select id="address_id">
+              <option value="">Select an address</option>
+            </select>
             <button type="submit" class="btn btn-primary" value="Add customer">Submit</button>
           </form>
         </div>
@@ -300,19 +275,12 @@
             <button type="submit" class="btn btn-primary">Submit</button>
           </form>
         </div>
-        <!-- /.card -->
       </section>
-      <!-- /.content -->
     </div>
-    <!-- /.content-wrapper -->
 
-    <!-- Control Sidebar -->
     <aside class="control-sidebar control-sidebar-dark">
-      <!-- Control sidebar content goes here -->
     </aside>
-    <!-- /.control-sidebar -->
   </div>
-  <!-- ./wrapper -->
 
   <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -328,7 +296,7 @@
             row.insertCell(3).textContent = customer.last_name;
             row.insertCell(4).textContent = customer.email;
             row.insertCell(5).textContent = customer.address_id;
-            const crudCell = row.insertCell(5);
+            const crudCell = row.insertCell(6);
 
             const crudButtonsContainer = document.createElement('div');
 
@@ -353,7 +321,7 @@
                 })
                 .catch(error => console.error('Error al obtener y eliminar el cliente:', error));
             });
-            crudButtonsContainer.appendChild(deleteCustomer);
+            crudButtonsContainer.appendChild(deletecustomer);
             crudCell.appendChild(crudButtonsContainer);
           });
         })
@@ -363,74 +331,86 @@
       const overlay = document.getElementById('overlay');
 
       function showPopup() {
-            popup.style.display = 'block';
-            overlay.style.display = 'block';
-          }
-      
-          function hidePopup() {
-            popup.style.display = 'none';
-            overlay.style.display = 'none';
-          }
-      
-          document.querySelector('.popup-trigger').addEventListener('click', showPopup);
-      
-          document.getElementById('overlay').addEventListener('click', hidePopup);
-      
-      
-          const popupEdit = document.getElementById('popupEdit');
-          const overlayEdit = document.getElementById('overlayEdit');
-      
-          function showPopupEdit() {
-            popupEdit.style.display = 'block';
-            overlayEdit.style.display = 'block';
-          }
-      
-          function hidePopupEdit() {
-            popupEdit.style.display = 'none';
-            overlayEdit.style.display = 'none';
-          }
-      
-          document.getElementById('customersTable').addEventListener('click', function(event) {
-            if (event.target.classList.contains('popup-trigger-edit')) {
-              showPopupEdit();
+        popup.style.display = 'block';
+        overlay.style.display = 'block';
+      }
+
+      function hidePopup() {
+        popup.style.display = 'none';
+        overlay.style.display = 'none';
+      }
+
+      document.querySelector('.popup-trigger').addEventListener('click', showPopup);
+
+      document.getElementById('overlay').addEventListener('click', hidePopup);
+
+
+      const popupEdit = document.getElementById('popupEdit');
+      const overlayEdit = document.getElementById('overlayEdit');
+
+      function showPopupEdit() {
+        popupEdit.style.display = 'block';
+        overlayEdit.style.display = 'block';
+      }
+
+      function hidePopupEdit() {
+        popupEdit.style.display = 'none';
+        overlayEdit.style.display = 'none';
+      }
+
+      document.getElementById('customersTable').addEventListener('click', function (event) {
+        if (event.target.classList.contains('popup-trigger-edit')) {
+          showPopupEdit();
+        }
+      });
+
+      document.getElementById('overlayEdit').addEventListener('click', hidePopupEdit);
+
+      document.getElementById('customerForm').addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        const formData = {
+          store_id: document.getElementById('store_id').value,
+          first_name: document.getElementById('first_name').value,
+          last_name: document.getElementById('last_name').value,
+          email: document.getElementById('email').value,
+          address_id: document.getElementById('address_id').value,
+        };
+        console.log(formData);
+
+        fetch('/customers/crear', {
+          method: 'POST',
+          headers: {
+            'content-type': 'application/json',
+          },
+          body: JSON.stringify(formData)
+        })
+          .then(response => {
+            if (response.ok) {
+              hidePopup();
+              window.location.reload();
+            } else {
+              throw new Error('Error al agregar el cliente');
             }
-          });
-      
-          document.getElementById('overlayEdit').addEventListener('click', hidePopupEdit);
-      
-          document.getElementById('customerForm').addEventListener('submit', function (event) {
-            event.preventDefault();
-      
-            const formData = {
-              store_id: document.getElementById('store_id').value,
-              first_name: document.getElementById('first_name').value,
-              last_name: document.getElementById('last_name').value,
-              email: document.getElementById('email').value,
-              address_id: document.getElementById('address_id').value,
-              activebool: document.getElementById('activebool').value,
-            };
-            console.log(formData);
-      
-            fetch('/customers/crear', {
-                method: 'POST',
-                headers: {
-                  'content-type': 'application/json',
-                },
-                body: JSON.stringify(formData)
-              })
-              .then(response => {
-                if (response.ok) {
-                  hidePopup();
-                  window.location.reload();
-                } else {
-                  throw new Error('Error al agregar el cliente');
-                }
-              })
-              .catch(error => console.error('Error al añadir el cliente:', error));
-          });
-          
-        });
+          })
+          .catch(error => console.error('Error al añadir el cliente:', error));
+      });
+
+    });
   </script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $(document).ready(function() {
+      $.get('/customers/addresses', function(data) {
+          data.forEach(function(addressId) {
+              $('#address_id').append($('<option>', {
+                  value: addressId,
+                  text: addressId
+              }));
+          });
+      });
+  });
+</script>
   <!-- jQuery -->
   <script src="../../plugins/jquery/jquery.min.js"></script>
   <!-- Bootstrap 4 -->
