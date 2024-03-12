@@ -321,7 +321,8 @@
               <input type="text" class="form-control" id="last_name" name="last_name">
             </div>
             <div class="mb-3">
-              <select id="address_id">
+              <label for="address_id" class="form-label">Address</label>
+              <select id="address_id" class="form-control">
                 <option value="">Select an address</option>
               </select>
             </div>
@@ -331,8 +332,11 @@
             </div>
             <div class="mb-3">
               <label for="store_id" class="form-label">Store</label>
-              <input type="text" class="form-control" id="store_id" name="store_id">
+              <select id="store_id" class="form-control">
+                <option value="">Select a store</option>
+              </select>
             </div>
+
             <div class="mb-3">
               <label for="active" class="form-label">Active</label>
               <input type="text" class="form-control" id="active" name="active">
@@ -420,24 +424,24 @@
 
 
 
-            const popup = document.getElementById('popup');
-            const overlay = document.getElementById('overlay');
+          const popup = document.getElementById('popup');
+          const overlay = document.getElementById('overlay');
 
-            function showPopup() {
-              popup.style.display = 'block';
-              overlay.style.display = 'block';
-            }
+          function showPopup() {
+            popup.style.display = 'block';
+            overlay.style.display = 'block';
+          }
 
-            function hidePopup() {
-              popup.style.display = 'none';
-              overlay.style.display = 'none';
-            }
+          function hidePopup() {
+            popup.style.display = 'none';
+            overlay.style.display = 'none';
+          }
 
-            // Evento para mostrar el popup cuando se hace clic en el botón
-            document.querySelector('.popup-trigger').addEventListener('click', showPopup);
+          // Evento para mostrar el popup cuando se hace clic en el botón
+          document.querySelector('.popup-trigger').addEventListener('click', showPopup);
 
-            // Evento para ocultar el popup cuando se hace clic en el overlay
-            document.getElementById('overlay').addEventListener('click', hidePopup);
+          // Evento para ocultar el popup cuando se hace clic en el overlay
+          document.getElementById('overlay').addEventListener('click', hidePopup);
 
           document.getElementById('staffForm').addEventListener('submit', function (event) {
             event.preventDefault();
@@ -475,16 +479,25 @@
       </script>
       <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
       <script>
-        $(document).ready(function() {
-            $.get('/customers/addresses', function(data) {
-                data.forEach(function(addressId) {
-                    $('#address_id').append($('<option>', {
-                        value: addressId,
-                        text: addressId
-                    }));
-                });
-            });
+        $.get('/staff/addresses', function (data) {
+          data.forEach(function (address) {
+            $('#address_id').append($('<option>', {
+              value: address.address_id,
+              text: address.address // Suponiendo que 'address_name' es el nombre de la dirección
+            }));
+          });
         });
+
+
+        $.get('/staff/store', function (data) {
+          data.forEach(function (storeId) {
+            $('#store_id').append($('<option>', {
+              value: storeId,
+              text: storeId
+            }));
+          });
+        });
+
       </script>
     </div>
     <!-- /.content-wrapper -->

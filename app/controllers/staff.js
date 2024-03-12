@@ -33,7 +33,6 @@ router.post('/crear', async (req, res) => {
     try {
         await client.connect();
         const result = await client.query('INSERT INTO staff (first_name, last_name, address_id, email, store_id, active, username, password) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *', [first_name, last_name, address_id, email, store_id, active, username, password]);
-        console.log('new film: ' + result.json());
 
         res.status(201).json(result.rows[0]);
     } catch (error) {
@@ -44,6 +43,39 @@ router.post('/crear', async (req, res) => {
     }
 });
 
+router.get('/addresses', async (req, res) => {
+    const client = new Client(db); 
+    try {
+        client.connect();
+        
+        const result = await client.query('SELECT * FROM address');
+        const addresses = result.rows;
+        
+        res.json(addresses);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal server error' });
+    } finally {
+        client.end();
+    }
+});
 
+
+router.get('/store', async (req, res) => {
+    const client = new Client(db); 
+    try {
+        client.connect();
+        
+        const result = await client.query('SELECT store_id FROM store');
+        const stores = result.rows.map(row => row.store_id);
+        
+        res.json(stores);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal server error' });
+    } finally {
+        client.end();
+    }
+});
 module.exports = router;
 ///staff?skip=50&take=50
