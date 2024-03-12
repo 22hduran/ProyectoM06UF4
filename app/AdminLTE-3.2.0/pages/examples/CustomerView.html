@@ -58,6 +58,30 @@
       background-color: rgba(0, 0, 0, 0.5);
       z-index: 9998;
     }
+
+    .popupEdit {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: white;
+      padding: 30px;
+      border: 1px solid #ccc;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      z-index: 9999;
+    }
+
+    .overlayEdit {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 9998;
+    }
   </style>
 </head>
 
@@ -215,39 +239,67 @@
 
               </tbody>
             </table>
-            
-
-
           </div>
-          <!-- /.card-footer-->
         </div>
 
         <div class="overlay" id="overlay"></div>
-            <div class="popup" id="popup">
-              <form style="width: 500px;">
-                <div class="mb-3">
-                  <label for="first_name" class="form-label">Customer ID</label>
-                  <input type="text" class="form-control " id="first_name" >
-                </div>
-                <div class="mb-3">
-                  <label for="last_name" class="form-label">Store ID</label>
-                  <input type="text" class="form-control" id="last_name">
-                </div>
-                <div class="mb-3">
-                  <label for="last_name" class="form-label">First name</label>
-                  <input type="text" class="form-control" id="last_name">
-                </div>
-                <div class="mb-3">
-                  <label for="store" class="form-label">Email</label>
-                  <input type="text" class="form-control" id="store">
-                </div>
-                <div class="mb-3">
-                  <label for="exampleInputEmail1" class="form-label">Adress ID</label>
-                  <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">              
-                </div>
-                <button type="submit" class="btn btn-primary">Submit</button>
-              </form>
+        <div class="popup" id="popup">
+          <form style="width: 500px;" id="customerForm">
+            <div class="mb-3">
+              <label for="store_id" class="form-label">Store ID</label>
+              <input type="text" class="form-control" id="store_id">
             </div>
+            <div class="mb-3">
+              <label for="first_name" class="form-label">First name</label>
+              <input type="text" class="form-control" id="first_name">
+            </div>
+            <div class="mb-3">
+              <label for="last_name" class="form-label">Last name</label>
+              <input type="text" class="form-control" id="last_name">
+            </div>
+            <div class="mb-3">
+              <label for="email" class="form-label">Email</label>
+              <input type="email" class="form-control" id="email">
+            </div>
+            <div class="mb-3">
+              <label for="address" class="form-label">Address ID</label>
+              <input type="text" class="form-control" id="address_id" aria-describedby="emailHelp">
+            </div>
+            <div class="mb-3">
+              <label for="activebool" class="form-label">Activebool</label>
+              <input type="activebool" class="form-control" id="activebool">
+            </div>
+            <button type="submit" class="btn btn-primary" value="Add customer">Submit</button>
+          </form>
+        </div>
+
+
+        <div class="overlayEdit" id="overlayEdit"></div>
+        <div class="popupEdit" id="popupEdit">
+          <form style="width: 500px;">
+            <div class="mb-3">
+              <label for="store_id" class="form-label">Store ID</label>
+              <input type="text" class="form-control" id="store_id-Edit">
+            </div>
+            <div class="mb-3">
+              <label for="first_name" class="form-label">First name</label>
+              <input type="text" class="form-control" id="first_name-Edit">
+            </div>
+            <div class="mb-3">
+              <label for="last_name" class="form-label">Last name</label>
+              <input type="text" class="form-control" id="last_name-Edit">
+            </div>
+            <div class="mb-3">
+              <label for="email" class="form-label">Email</label>
+              <input type="email" class="form-control" id="email-Edit">
+            </div>
+            <div class="mb-3">
+              <label for="address" class="form-label">Address ID</label>
+              <input type="text" class="form-control" id="address_id-Edit" aria-describedby="emailHelp">
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </form>
+        </div>
         <!-- /.card -->
       </section>
       <!-- /.content -->
@@ -263,44 +315,121 @@
   <!-- ./wrapper -->
 
   <script>
-    fetch('/customers')
-      .then(response => response.json())
-      .then(customers => {
-        const table = document.getElementById('customersTable').getElementsByTagName('tbody')[0];
-        customers.forEach(customer => {
-          const row = table.insertRow();
-          row.insertCell(0).textContent = customer.customer_id;
-          row.insertCell(1).textContent = customer.store_id;
-          row.insertCell(2).textContent = customer.first_name;
-          row.insertCell(3).textContent = customer.last_name;
-          row.insertCell(4).textContent = customer.email;
-          row.insertCell(5).textContent = customer.address_id;
-        });
-      })
-      .catch(error => console.error('Error fetching customers:', error));
-  </script>
-
-  <script>
     document.addEventListener('DOMContentLoaded', function () {
+      fetch('/customers?skip=0&take=10')
+        .then(response => response.json())
+        .then(customers => {
+          const table = document.getElementById('customersTable').getElementsByTagName('tbody')[0];
+          customers.forEach(customer => {
+            const row = table.insertRow();
+            row.insertCell(0).textContent = customer.customer_id;
+            row.insertCell(1).textContent = customer.store_id;
+            row.insertCell(2).textContent = customer.first_name;
+            row.insertCell(3).textContent = customer.last_name;
+            row.insertCell(4).textContent = customer.email;
+            row.insertCell(5).textContent = customer.address_id;
+            const crudCell = row.insertCell(5);
+
+            const crudButtonsContainer = document.createElement('div');
+
+            //Editar
+            const editCustomer = document.createElement('button');
+            editCustomer.textContent = '✏️';
+            editCustomer.classList.add('popup-trigger-edit');
+            crudButtonsContainer.appendChild(editCustomer);
+
+            //Eliminar
+            const deletecustomer = document.createElement('button');
+            deletecustomer.textContent = '🗑️';
+            deletecustomer.addEventListener('click', () => {
+              const customerId = row.dataset.customerId;
+              fetch(`/customers/${customerId}`, { method: 'DELETE' })
+                .then(res => {
+                  if (res.ok) {
+                    table.deleteRow(row.rowIndex);
+                  } else {
+                    throw new Error('Error al eliminar el cliente');
+                  }
+                })
+                .catch(error => console.error('Error al obtener y eliminar el cliente:', error));
+            });
+            crudButtonsContainer.appendChild(deleteCustomer);
+            crudCell.appendChild(crudButtonsContainer);
+          });
+        })
+        .catch(error => console.error('Error fetching customers:', error));
+
       const popup = document.getElementById('popup');
       const overlay = document.getElementById('overlay');
 
       function showPopup() {
-        popup.style.display = 'block';
-        overlay.style.display = 'block';
-      }
-
-      function hidePopup() {
-        popup.style.display = 'none';
-        overlay.style.display = 'none';
-      }
-
-      // Evento para mostrar el popup cuando se hace clic en el botón
-      document.querySelector('.popup-trigger').addEventListener('click', showPopup);
-
-      // Evento para ocultar el popup cuando se hace clic en el overlay
-      document.getElementById('overlay').addEventListener('click', hidePopup);
-    });
+            popup.style.display = 'block';
+            overlay.style.display = 'block';
+          }
+      
+          function hidePopup() {
+            popup.style.display = 'none';
+            overlay.style.display = 'none';
+          }
+      
+          document.querySelector('.popup-trigger').addEventListener('click', showPopup);
+      
+          document.getElementById('overlay').addEventListener('click', hidePopup);
+      
+      
+          const popupEdit = document.getElementById('popupEdit');
+          const overlayEdit = document.getElementById('overlayEdit');
+      
+          function showPopupEdit() {
+            popupEdit.style.display = 'block';
+            overlayEdit.style.display = 'block';
+          }
+      
+          function hidePopupEdit() {
+            popupEdit.style.display = 'none';
+            overlayEdit.style.display = 'none';
+          }
+      
+          document.getElementById('customersTable').addEventListener('click', function(event) {
+            if (event.target.classList.contains('popup-trigger-edit')) {
+              showPopupEdit();
+            }
+          });
+      
+          document.getElementById('overlayEdit').addEventListener('click', hidePopupEdit);
+      
+          document.getElementById('customerForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+      
+            const formData = {
+              store_id: document.getElementById('store_id').value,
+              first_name: document.getElementById('first_name').value,
+              last_name: document.getElementById('last_name').value,
+              email: document.getElementById('email').value,
+              address_id: document.getElementById('address_id').value,
+              activebool: document.getElementById('activebool').value,
+            };
+            console.log(formData);
+      
+            fetch('/customers/crear', {
+                method: 'POST',
+                headers: {
+                  'content-type': 'application/json',
+                },
+                body: JSON.stringify(formData)
+              })
+              .then(response => {
+                if (response.ok) {
+                  hidePopup();
+                  window.location.reload();
+                } else {
+                  throw new Error('Error al agregar el cliente');
+                }
+              })
+              .catch(error => console.error('Error al añadir el cliente:', error));
+          });
+          
+        });
   </script>
   <!-- jQuery -->
   <script src="../../plugins/jquery/jquery.min.js"></script>
