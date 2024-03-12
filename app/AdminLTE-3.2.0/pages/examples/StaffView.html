@@ -321,8 +321,9 @@
               <input type="text" class="form-control" id="last_name" name="last_name">
             </div>
             <div class="mb-3">
-              <label for="address_id" class="form-label">Address</label>
-              <input type="text" class="form-control" id="address_id" name="address_id">
+              <select id="address_id">
+                <option value="">Select an address</option>
+              </select>
             </div>
             <div class="mb-3">
               <label for="email" class="form-label">Email address</label>
@@ -470,6 +471,19 @@
               })
               .catch(error => console.error('Error al añadir la película:', error));
           });
+        });
+      </script>
+      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+      <script>
+        $(document).ready(function() {
+            $.get('/customers/addresses', function(data) {
+                data.forEach(function(addressId) {
+                    $('#address_id').append($('<option>', {
+                        value: addressId,
+                        text: addressId
+                    }));
+                });
+            });
         });
       </script>
     </div>
