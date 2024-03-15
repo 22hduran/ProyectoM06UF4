@@ -6,17 +6,31 @@ const db = require('../database/dbconfig');
 router.use(express.urlencoded({ extended: true }));
 
 router.get('/', async (req, res) => {
-    const client = new Client(db); 
+    const client = new Client(db);
     try {
         client.connect();
         let skip = req.query.skip || 0;
         let take = req.query.take || 50;
-        
-        const result = await client.query(`SELECT * FROM film LIMIT ${take} OFFSET ${skip}`);
 
-        const films = result.rows;
+        const result = await client.query(`
+            SELECT f.*, 
+            COUNT(r.rental_id) AS rental_count
+            FROM film f 
+            LEFT JOIN inventory i ON f.film_id = i.film_id
+            LEFT JOIN rental r ON i.inventory_id = r.inventory_id
+            GROUP BY f.film_id
+            ORDER BY f.film_id asc
+            LIMIT ${take} OFFSET ${skip}
+        `);
+
+        const films = result.rows.map(film => {
+            return {
+                ...film,
+                rentalCount: parseInt(film.rental_count)
+            };
+        });
         res.json(films);
-      
+
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Internal server error' });
@@ -31,7 +45,7 @@ router.post('/crear', async (req, res) => {
     const client = new Client(db);
     try {
         await client.connect();
-        const result = await client.query('INSERT INTO film (title, description, release_year, language_id, rental_duration, rental_rate, length, replacement_cost) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *', 
+        const result = await client.query('INSERT INTO film (title, description, release_year, language_id, rental_duration, rental_rate, length, replacement_cost) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *',
             [title, description, release_year, language_id, rental_duration, rental_rate, length, replacement_cost]);
 
         res.status(201).json(result.rows[0]);
@@ -118,7 +132,6 @@ router.delete('/:id', async (req, res) => {
 });
 
 module.exports = router;
-
 
 // Dani
 // - DELETE
