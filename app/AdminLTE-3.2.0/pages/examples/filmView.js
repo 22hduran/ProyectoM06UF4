@@ -25,57 +25,77 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('overlay').addEventListener('click', hidePopup);
     document.getElementById('overlayEdit').addEventListener('click', hidePopupEdit);
 
+    let currentPage = 1;
+    const pageSize = 5;
+    // fetch('/films?skip=0&take=1100')
+
+    function goToPage(page) {
+        if (page >= 1) {
+            currentPage = page;
+            fetchFilms(currentPage);
+        }
+    }
+
     // Mostrar Films GET
-    fetch('/films?skip=0&take=1100')
-        .then(response => response.json())
-        .then(films => {
-            const table = document.getElementById('filmsTable').getElementsByTagName('tbody')[0];
-            films.forEach(async film => {
-                const row = table.insertRow();
-                row.dataset.filmId = film.film_id;
-                row.insertCell(0).textContent = film.film_id;
-                row.insertCell(1).textContent = film.title;
-                row.insertCell(2).textContent = film.description;
-                row.insertCell(3).textContent = film.release_year;
-                row.insertCell(4).textContent = film.replacement_cost;
-                const crudCell = row.insertCell(5);
+    function fetchFilms(page) {
+        fetch(`/films?page=${page}&pageSize=${pageSize}`)
+            .then(response => response.json())
+            .then(films => {
+                const table = document.getElementById('filmsTable').getElementsByTagName('tbody')[0];
+                table.innerHTML = '';
+                films.forEach(async film => {
+                    const row = table.insertRow();
+                    row.dataset.filmId = film.film_id;
+                    row.insertCell(0).textContent = film.film_id;
+                    row.insertCell(1).textContent = film.title;
+                    row.insertCell(2).textContent = film.description;
+                    row.insertCell(3).textContent = film.release_year;
+                    row.insertCell(4).textContent = film.replacement_cost;
+                    const crudCell = row.insertCell(5);
 
-                const crudButtonsContainer = document.createElement('div');
+                    const crudButtonsContainer = document.createElement('div');
 
-                //Editar
-                const editFilm = document.createElement('button');
-                editFilm.textContent = '✏️';
-                editFilm.classList.add('popup-trigger-edit');
-                crudButtonsContainer.appendChild(editFilm);
+                    //Editar
+                    const editFilm = document.createElement('button');
+                    editFilm.textContent = '✏️';
+                    editFilm.classList.add('popup-trigger-edit');
+                    crudButtonsContainer.appendChild(editFilm);
 
-                //Eliminar
-                const deleteFilm = document.createElement('button');
-                deleteFilm.textContent = '🗑️';
-                deleteFilm.addEventListener('click', () => {
-                    const filmId = row.dataset.filmId;
-                    fetch(`/films/${filmId}`, { method: 'DELETE' })
-                        .then(res => {
-                            if (res.ok) {
-                                table.deleteRow(row.rowIndex);
-                            } else {
-                                throw new Error('Error al eliminar el film');
-                            }
-                        })
-                        .catch(error => console.error('Error al obtener y eliminar el film:', error));
+                    //Eliminar
+                    const deleteFilm = document.createElement('button');
+                    deleteFilm.textContent = '🗑️';
+                    deleteFilm.addEventListener('click', () => {
+                        const filmId = row.dataset.filmId;
+                        fetch(`/films/${filmId}`, { method: 'DELETE' })
+                            .then(res => {
+                                if (res.ok) {
+                                    table.deleteRow(row.rowIndex);
+                                } else {
+                                    throw new Error('Error al eliminar el film');
+                                }
+                            })
+                            .catch(error => console.error('Error al obtener y eliminar el film:', error));
+                    });
+
+                    if (film.rentalCount > 0) {
+                        deleteFilm.classList.add('delete-film-red');
+                    } else {
+                        deleteFilm.classList.add('delete-film-green');
+                    }
+
+                    crudButtonsContainer.appendChild(deleteFilm);
+                    crudCell.appendChild(crudButtonsContainer);
                 });
+            })
+            .catch(error => console.error('Error fetching films:', error));
+    }
 
-                if (film.rentalCount > 0) {
-                    deleteFilm.classList.add('delete-film-red');
-                } else {
-                    deleteFilm.classList.add('delete-film-green');
-                }
-
-                crudButtonsContainer.appendChild(deleteFilm);
-                crudCell.appendChild(crudButtonsContainer);
-            });
-        })
-        .catch(error => console.error('Error fetching films:', error));
-
+    document.getElementById('btnFirstPage').addEventListener('click', () => goToPage(1));
+    document.getElementById('btnPrevPage').addEventListener('click', () => goToPage(currentPage - 1));
+    document.getElementById('btnNextPage').addEventListener('click', () => goToPage(currentPage + 1));
+    
+    fetchFilms(currentPage);
+   
     // Crear Films POST
     document.getElementById('filmForm').addEventListener('submit', function (event) {
         event.preventDefault();

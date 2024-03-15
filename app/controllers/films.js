@@ -9,8 +9,11 @@ router.get('/', async (req, res) => {
     const client = new Client(db);
     try {
         client.connect();
-        let skip = req.query.skip || 0;
-        let take = req.query.take || 50;
+        // let skip = req.query.skip || 0;
+        // let take = req.query.take || 50;
+        let page = req.query.page || 1;
+        let pageSize = req.query.pageSize || 5;
+        let skip = (page - 1) * pageSize;
 
         const result = await client.query(`
             SELECT f.*, 
@@ -20,7 +23,7 @@ router.get('/', async (req, res) => {
             LEFT JOIN rental r ON i.inventory_id = r.inventory_id
             GROUP BY f.film_id
             ORDER BY f.film_id asc
-            LIMIT ${take} OFFSET ${skip}
+            LIMIT ${pageSize} OFFSET ${skip}
         `);
 
         const films = result.rows.map(film => {
