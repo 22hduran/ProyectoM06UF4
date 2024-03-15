@@ -65,8 +65,6 @@ router.get('/:id', async (req, res) => {
 router.put('/:id', async (req, res) => {
     const { id } = req.params;
     const { title, description, release_year, language_id, rental_duration, rental_rate, length, replacement_cost } = req.body;
-    console.log('body: ');
-    console.log(req.body);
 
     if (!title || !description || !release_year || !language_id || !rental_duration || !rental_rate || !length || !replacement_cost) {
         return res.status(400).json({ message: 'Todos los campos son requeridos' });
@@ -75,11 +73,6 @@ router.put('/:id', async (req, res) => {
     const client = new Client(db);
     try {
         await client.connect();
-
-        // const existingFilm = await client.query('SELECT * FROM film WHERE film_id = $1', [id]);
-        // if (existingFilm.rows.length === 0) {
-        //     return res.status(404).json({ message: 'Película no encontrada' });
-        // }
 
         const result = await client.query(
             'UPDATE film SET title = $1, description = $2, release_year = $3, language_id = $4, rental_duration = $5, rental_rate = $6, length = $7, replacement_cost = $8 WHERE film_id = $9 RETURNING *',
@@ -98,15 +91,16 @@ router.put('/:id', async (req, res) => {
 router.delete('/:id', async (req, res) => {
     const { id } = req.params;
     const client = new Client(db);
+    console.log('id: ' + id);
     try {
-        client.connect();
-
+        await client.connect();
         const rentalCheckResult = await client.query('SELECT COUNT(*) FROM rental WHERE inventory_id IN (SELECT inventory_id FROM inventory WHERE film_id = $1)', [id]);
         const rentalCount = parseInt(rentalCheckResult.rows[0].count);
-
+        console.log('rentalCount: ' + rentalCount);
         if (rentalCount > 0) {
             return res.status(400).json({ message: 'No se puede eliminar la película porque está siendo utilizada en transacciones de alquiler.' });
         }
+        console.log('hola');
 
         await client.query('DELETE FROM film_actor WHERE film_id = $1', [id]);
         await client.query('DELETE FROM film_category WHERE film_id = $1', [id]);
@@ -114,12 +108,27 @@ router.delete('/:id', async (req, res) => {
         const result = await client.query('DELETE FROM film WHERE film_id = $1 RETURNING *', [id]);
 
         res.json(result.rows[0]);
-        client.end();
     } catch (error) {
         await client.query('ROLLBACK');
         console.error(error);
         res.status(500).json({ message: 'Internal server error' });
+    } finally {
+        client.end();
     }
 });
 
 module.exports = router;
+
+
+// Dani
+// - DELETE
+// - quitar script
+// - ayudar CRUD
+
+// Hugo
+// - header
+// - form
+// - ruedecita
+
+// Raul
+// - paginacion

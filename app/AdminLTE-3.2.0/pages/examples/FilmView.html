@@ -77,6 +77,14 @@
       background-color: rgba(0, 0, 0, 0.5);
       z-index: 9998;
     }
+
+    .delete-film-red {
+      background-color: red;
+    }
+
+    .delete-film-green {
+      background-color: green;
+    }
   </style>
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet"
@@ -329,9 +337,10 @@
           <br><br>
 
           <label for="description">Description:</label>
-          <textarea id="descriptiofilmForm
+          <textarea id="description" name="description" required></textarea>
+          <br><br>
 
-          <label for="release_year">Release Year:</label>
+          <label for=" release_year">Release Year:</label>
           <input type="number" id="release_year" name="release_year" required>
           <br><br>
 
@@ -434,7 +443,7 @@
           document.getElementById('overlayEdit').addEventListener('click', hidePopupEdit);
 
           // Mostrar Films GET
-          fetch('/films?skip=0&take=10')
+          fetch('/films?skip=0&take=200')
             .then(response => response.json())
             .then(films => {
               const table = document.getElementById('filmsTable').getElementsByTagName('tbody')[0];
@@ -471,6 +480,15 @@
                     })
                     .catch(error => console.error('Error al obtener y eliminar el film:', error));
                 });
+                console.log(film);
+                if (film.rentalCount > 0) {
+                  console.log('a: ' + film.rentalCount);
+                  deleteFilm.classList.add('delete-film-red');
+                } else {
+                  console.log('b: ' + film.rentalCount);
+                  deleteFilm.classList.add('delete-film-green');
+                }
+
                 crudButtonsContainer.appendChild(deleteFilm);
                 crudCell.appendChild(crudButtonsContainer);
               });
@@ -548,10 +566,10 @@
 
           document.getElementById('filmFormEdit').addEventListener('submit', function (event) {
             event.preventDefault();
-            
+
             const filmId = currentFilmId;
             console.log('filmId:', filmId);
-            
+
             const formDataEdit = {
               title: document.getElementById('titleEdit').value,
               description: document.getElementById('descriptionEdit').value,
@@ -571,8 +589,11 @@
               body: JSON.stringify(formDataEdit)
             })
               .then(res => {
-                if (!res.ok) {
-                  throw new Error('Error al actualizar los detalles de la película');
+                if (res.ok) {
+                  hidePopupEdit();
+                  window.location.reload();
+                } else {
+                  throw new Error('Error al editar la película');
                 }
                 console.log('Película actualizada con éxito');
               })
