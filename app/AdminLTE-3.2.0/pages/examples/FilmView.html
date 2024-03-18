@@ -35,6 +35,7 @@
       background-color: white;
       padding: 30px;
       border: 1px solid #ccc;
+      border-radius: 20px;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
       z-index: 9999;
       overflow: auto;
@@ -318,40 +319,42 @@
 
       <div class="overlay" id="overlay"></div>
       <div class="popup" id="popup">
-        <form style="width: 500px; height: 600px;" id="filmForm">
-          <label for="title">Title:</label>
-          <input type="text" id="title" name="title" class="form-control" required>
-          <br>
-
-          <label for="description">Description:</label>
-          <textarea id="descriptionfilmForm" class="form-control"></textarea>
-
-          <label for="release_year">Release Year:</label>
-          <input type="number" id="release_year" name="release_year" class="form-control" required>
-          <br>
-
-          <label for="language_id">Language:</label>
-          <select id="language_id" name="language_id" class="form-control" required>
-            <option value="1">English</option>
-            <option value="2">Spanish</option>
-          </select>
-          <br>
-
-          <label for="rental_duration">Rental Duration (in days):</label>
-          <input type="number" id="rental_duration" name="rental_duration" class="form-control" required>
-          <br>
-
-          <label for="rental_rate">Rental Rate:</label>
-          <input type="text" id="rental_rate" name="rental_rate" class="form-control" required>
-          <br>
-
-          <label for="length">Length (in minutes):</label>
-          <input type="number" id="length" name="length" class="form-control" required>
-          <br>
-
-          <label for="replacement_cost">Replacement Cost:</label>
-          <input type="text" id="replacement_cost" name="replacement_cost" class="form-control" required>
-          <br>
+        <form style="width: 500px; height: 575px;" id="filmForm">
+          <div class="mb-3">
+            <label for="title" class="form-label">Title:</label>
+            <input type="text" id="title" name="title" class="form-control" required>
+          </div>
+          <div class="mb-3">
+            <label for="description" class="form-label">Description:</label>
+            <textarea id="descriptionfilmForm" class="form-control"></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="release_year" class="form-label">Release Year:</label>
+            <input type="number" id="release_year" name="release_year" class="form-control" required>
+          </div>
+          <div class="mb-3">
+            <label for="language_id" class="form-label">Language:</label>
+            <select id="language_id" name="language_id" class="form-control" required>
+              <option value="1">English</option>
+              <option value="2">Spanish</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="rental_duration" class="form-label">Rental Duration (in days):</label>
+            <input type="number" id="rental_duration" name="rental_duration" class="form-control" required>
+          </div>
+          <div class="mb-3">
+            <label for="rental_rate" class="form-label">Rental Rate:</label>
+            <input type="text" id="rental_rate" name="rental_rate" class="form-control" required>
+          </div>
+          <div class="mb-3">
+            <label for="length" class="form-label">Length (in minutes):</label>
+            <input type="number" id="length" name="length" class="form-control" required>
+          </div>
+          <div class="mb-3">
+            <label for="replacement_cost" class="form-label">Replacement Cost:</label>
+            <input type="text" id="replacement_cost" name="replacement_cost" class="form-control" required>
+          </div>
 
           <button type="submit" class="btn btn-primary" value="Add Film">Submit</button>
         </form>
