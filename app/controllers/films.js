@@ -44,7 +44,6 @@ router.get('/', async (req, res) => {
 
 router.post('/crear', async (req, res) => {
     const { title, description, release_year, language_id, rental_duration, rental_rate, length, replacement_cost } = req.body;
-
     const client = new Client(db);
     try {
         await client.connect();

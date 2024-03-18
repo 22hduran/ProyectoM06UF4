@@ -75,6 +75,39 @@
       background-color: rgba(0, 0, 0, 0.5);
       z-index: 9998;
     }
+
+    .delete-film-red {
+      background-color: red;
+    }
+
+    .delete-film-green {
+      background-color: green;
+    }
+
+    .loader {
+      border: 8px solid #f3f3f3;
+      border-top: 8px solid #3498db;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+      margin: auto;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    #loading {
+      text-align: center;
+      margin-top: 50px;
+    }
   </style>
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet"
@@ -317,6 +350,11 @@
         </table>
       </section>
 
+      <div id="loading">
+        <div class="loader"></div>
+        <p>Loading...</p>
+      </div>
+
       <div class="overlay" id="overlay"></div>
       <div class="popup" id="popup">
         <form style="width: 500px; height: 575px;" id="filmForm">
@@ -326,7 +364,7 @@
           </div>
           <div class="mb-3">
             <label for="description" class="form-label">Description:</label>
-            <textarea id="descriptionfilmForm" class="form-control"></textarea>
+            <textarea id="description" class="form-control"></textarea>
           </div>
           <div class="mb-3">
             <label for="release_year" class="form-label">Release Year:</label>
@@ -362,7 +400,11 @@
 
       <div class="overlayEdit" id="overlayEdit"></div>
       <div class="popupEdit" id="popupEdit">
-        <form class="popup-form-edit" id="filmFormEdit">
+        <div id="loadingEdit" style="display: none;">
+          <div class="loader"></div>
+          <p>Loading...</p>
+        </div>
+        <form class="popup-form-edit" id="filmFormEdit" style="display: none;">
           <label for="title">Title:</label>
           <input type="text" id="titleEdit" name="title" required>
           <br><br>
@@ -401,6 +443,7 @@
           <input type="submit" value="Add Film">
         </form>
       </div>
+
       <script src="filmView.js"></script>
       <div style="text-align: center; margin-top: 20px;">
         <button id="btnFirstPage">Primera Página</button>
