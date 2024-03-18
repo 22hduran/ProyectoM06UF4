@@ -257,19 +257,34 @@
               <label for="email" class="form-label">Email</label>
               <input type="email" class="form-control" id="email-Edit">
             </div>
-            <div class="mb-3">
-              <label for="address" class="form-label">Address ID</label>
-              <input type="text" class="form-control" id="address_id-Edit" aria-describedby="emailHelp">
-            </div>
+            <label for="address">Select Address:</label><br>
+            <select id="address_id-Edit" class="form-control">
+              <option value="">Select an address</option>
+            </select><br>
             <button type="submit" class="btn btn-primary">Submit</button>
           </form>
         </div>
       </section>
     </div>
-
-    <aside class="control-sidebar control-sidebar-dark">
-    </aside>
+    <script src="customerView.js"></script>
+    <div style="text-align: center; margin-top: 20px;">
+      <button id="btnFirstPage">Primera Página</button>
+      <button id="btnPrevPage">Página Anterior</button>
+      <button id="btnNextPage">Página Siguiente</button>
+    </div>
   </div>
+  
+  <footer class="main-footer">
+    <div class="float-right d-none d-sm-block">
+      <b>Version</b> 0.0.1
+    </div>
+    <strong>Copyright &copy; 2024 <a href="https://adminlte.io">Customer Page</a>.</strong>
+  </footer>
+
+  <!-- Control Sidebar -->
+  <aside class="control-sidebar control-sidebar-dark">
+    <!-- Control sidebar content goes here -->
+  </aside>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
@@ -279,6 +294,13 @@
           data.forEach(function(addressId) {
               $('#address_id').append($('<option>', {
                   value: counter++,
+                  text: addressId
+              }));
+          });
+          var counterEdit = 1;
+          data.forEach(function(addressId) {
+              $('#address_id-Edit').append($('<option>', {
+                  value: counterEdit++,
                   text: addressId
               }));
           });
