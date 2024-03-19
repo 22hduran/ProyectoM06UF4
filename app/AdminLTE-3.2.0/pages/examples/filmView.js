@@ -28,19 +28,51 @@ document.addEventListener('DOMContentLoaded', function () {
 
     let currentPage = 1;
     const pageSize = 5;
-    // fetch('/films?skip=0&take=1100')
 
     function goToPage(page) {
         if (page >= 1) {
             currentPage = page;
+            showLoadingSpinner();
             fetchFilms(currentPage);
         }
     }
 
-    // Mostrar Films GET
-    function fetchFilms(page) {
+    function showLoadingSpinner() {
         const loading = document.getElementById('loading');
         loading.style.display = 'block';
+    }
+
+    function hideLoadingSpinner() {
+        const loading = document.getElementById('loading');
+        loading.style.display = 'none';
+    }
+
+    function showEditLoadingSpinner() {
+        const loadingEdit = document.getElementById('loadingEdit');
+        loadingEdit.style.display = 'block';
+    }
+
+    function hideEditLoadingSpinner() {
+        const loadingEdit = document.getElementById('loadingEdit');
+        loadingEdit.style.display = 'none';
+    }
+
+    function showTable() {
+        const tableBody = document.querySelector('#filmsTable tbody');
+        tableBody.style.display = 'table-row-group';
+    }
+
+    function hideTable() {
+        const tableBody = document.querySelector('#filmsTable tbody');
+        tableBody.style.display = 'none';
+    }
+
+    // Mostrar Films GET
+    function fetchFilms(page) {
+
+        showLoadingSpinner();
+        hideTable();
+
         setTimeout(() => {
             fetch(`/films?page=${page}&pageSize=${pageSize}`)
                 .then(response => response.json())
@@ -70,19 +102,24 @@ document.addEventListener('DOMContentLoaded', function () {
                         deleteFilm.textContent = '🗑️';
                         deleteFilm.addEventListener('click', () => {
                             const filmId = row.dataset.filmId;
-                            fetch(`/films/${filmId}`, { method: 'DELETE' })
-                                .then(res => {
+                            fetch(`/films/${filmId}`, { method: 'DELETE'})
+                                .then((res) => {
                                     if (res.ok) {
-                                        table.deleteRow(row.rowIndex);
+                                        try {
+                                            table.deleteRow(row.rowIndex);
+                                        } catch (error) {
+                                            console.log(error);
+                                        }
+                                        fetchFilms(currentPage);
                                     } else {
-                                        throw new Error('Error al eliminar el film');
+                                        alert(res.message);
                                     }
                                 })
-                                .catch(error => console.error('Error al obtener y eliminar el film:', error));
+                                .catch((err) => console.log(err));
                         });
+                        
 
                         if (film.rentalCount > 0) {
-                            console.log(film.rentalCount);
                             deleteFilm.classList.add('delete-film-red');
                         } else {
                             deleteFilm.classList.add('delete-film-green');
@@ -91,16 +128,29 @@ document.addEventListener('DOMContentLoaded', function () {
                         crudButtonsContainer.appendChild(deleteFilm);
                         crudCell.appendChild(crudButtonsContainer);
                     });
-                    loading.style.display = 'none';
+                    hideLoadingSpinner();
+                    showTable();
                 })
-                .catch(error => console.error('Error fetching films:', error));
+                .catch(error => { 
+                    console.error('Error fetching films:', error)
+                    hideLoadingSpinner();
+                });
         }, 1000)
-
     }
 
     document.getElementById('btnFirstPage').addEventListener('click', () => goToPage(1));
     document.getElementById('btnPrevPage').addEventListener('click', () => goToPage(currentPage - 1));
     document.getElementById('btnNextPage').addEventListener('click', () => goToPage(currentPage + 1));
+    document.getElementById('btnLastPage').addEventListener('click', () => {
+        fetch('/films/count')
+            .then(response => response.json())
+            .then(data => {
+                const totalCount = data.count;
+                const totalPages = Math.ceil(totalCount / pageSize);
+                goToPage(totalPages);
+            })
+            .catch(error => console.error('Error fetching total count:', error));
+    });
 
     fetchFilms(currentPage);
 
@@ -130,7 +180,7 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(response => {
                 if (response.ok) {
                     hidePopup();
-                    window.location.reload();
+                    fetchFilms(currentPage);
                 } else {
                     throw new Error('Error al agregar la película');
                 }
@@ -151,11 +201,11 @@ document.addEventListener('DOMContentLoaded', function () {
         popupEdit.style.display = 'block';
         overlayEdit.style.display = 'block';
 
-        const loadingEdit = document.getElementById('loadingEdit');
-        loadingEdit.style.display = 'block';
+        showEditLoadingSpinner();
 
         currentFilmId = event.target.closest('tr').dataset.filmId;
         console.log(currentFilmId);
+
         setTimeout(() => {
             fetch(`/films/${currentFilmId}`)
                 .then(response => {
@@ -173,12 +223,12 @@ document.addEventListener('DOMContentLoaded', function () {
                     document.getElementById('rental_rateEdit').value = film.rental_rate;
                     document.getElementById('lengthEdit').value = film.length;
                     document.getElementById('replacement_costEdit').value = film.replacement_cost;
-                    loadingEdit.style.display = 'none';
+                    hideEditLoadingSpinner();
                     document.getElementById('filmFormEdit').style.display = 'block';
                 })
                 .catch(error => {
                     console.error('Error fetching film details:', error);
-                    loadingEdit.style.display = 'none';
+                    hideEditLoadingSpinner();
                 });
         }, 2000);
     }

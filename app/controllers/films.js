@@ -9,8 +9,7 @@ router.get('/', async (req, res) => {
     const client = new Client(db);
     try {
         client.connect();
-        // let skip = req.query.skip || 0;
-        // let take = req.query.take || 50;
+
         let page = req.query.page || 1;
         let pageSize = req.query.pageSize || 5;
         let skip = (page - 1) * pageSize;
@@ -42,6 +41,26 @@ router.get('/', async (req, res) => {
     }
 });
 
+router.get('/count', async (req, res) => {
+    const client = new Client(db);
+    try {
+        await client.connect();
+
+        const result = await client.query(`
+            SELECT COUNT(*) AS film_count
+            FROM film
+        `);
+
+        const count = parseInt(result.rows[0].film_count);
+        res.json({ count });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal server error' });
+    } finally {
+        client.end();
+    }
+});
+
 router.post('/crear', async (req, res) => {
     const { title, description, release_year, language_id, rental_duration, rental_rate, length, replacement_cost } = req.body;
     const client = new Client(db);
@@ -49,7 +68,7 @@ router.post('/crear', async (req, res) => {
         await client.connect();
         const result = await client.query('INSERT INTO film (title, description, release_year, language_id, rental_duration, rental_rate, length, replacement_cost) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *',
             [title, description, release_year, language_id, rental_duration, rental_rate, length, replacement_cost]);
-
+        // const newFilm = result.rows[0];
         res.status(201).json(result.rows[0]);
     } catch (error) {
         console.error(error);
@@ -116,7 +135,6 @@ router.delete('/:id', async (req, res) => {
         if (rentalCount > 0) {
             return res.status(400).json({ message: 'No se puede eliminar la película porque está siendo utilizada en transacciones de alquiler.' });
         }
-        console.log('hola');
 
         await client.query('DELETE FROM film_actor WHERE film_id = $1', [id]);
         await client.query('DELETE FROM film_category WHERE film_id = $1', [id]);
@@ -127,7 +145,8 @@ router.delete('/:id', async (req, res) => {
     } catch (error) {
         await client.query('ROLLBACK');
         console.error(error);
-        res.status(500).json({ message: 'Internal server error' });
+        res.status(500).json({deleted: false, message: 'Error al eliminar el film.' });
+        return
     } finally {
         client.end();
     }
